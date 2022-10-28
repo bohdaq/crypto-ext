@@ -1,3 +1,5 @@
+test/encryption-parameters/*
+test/signature-parameters/*
 .idea
 /target
 /Cargo.lock

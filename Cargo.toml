@@ -6,7 +6,6 @@ homepage = "https://github.com/bohdaq/crypto-ext"
 repository = "https://github.com/bohdaq/crypto-ext"
 readme = "README.md"
 description = "Set of cryptographic functions to encrypt, decrypt, sign, verify data"
-edition = "2021"
 rust-version = "1.64"
 authors = ["Bohdan Tsap <bohdan.tsap@tutanota.com>"]
 keywords = ["encrypt", "decrypt", "sign", "verify", "digest"]
