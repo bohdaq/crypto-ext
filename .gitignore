@@ -1,5 +1,6 @@
-test/encryption-parameters/*
-test/signature-parameters/*
+.passphrase
+.private_key
+.public_key
 .idea
 /target
 /Cargo.lock

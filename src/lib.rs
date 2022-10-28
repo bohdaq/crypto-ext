@@ -1,4 +1,4 @@
-use std::env;
+use std::{env, fs};
 use std::fs::{File, OpenOptions};
 use std::io::{Read, Write};
 use std::path::Path;
@@ -31,6 +31,8 @@ fn setup_encryption(path_to_encryption_parameters: Option<&str>) -> Result<Encry
         return Err(boxed_passphrase_path.err().unwrap());
     }
     let passphrase_path = boxed_passphrase_path.unwrap();
+
+    println!("{}", passphrase_path);
 
     let boxed_passphrase = get_or_create_passphrase(passphrase_path.as_str());
     if boxed_passphrase.is_err() {

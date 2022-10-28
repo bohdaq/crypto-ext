@@ -1,3 +1,4 @@
+use std::fs;
 use openssl::bn::BigNumRef;
 use openssl::dsa::Dsa;
 use openssl::hash::MessageDigest;
@@ -26,11 +27,6 @@ fn encryption() {
 
 #[test]
 fn signing() {
-    // path needs to be accessible by user with write permission for initial setup
-    let relative_path_to_working_directory_for_storing_encryption_parameters = "/test/encryption_parameters/";
-    // it will read encryption params like public, private keys and passphrase or create them
-    let params = setup_encryption(Some(relative_path_to_working_directory_for_storing_encryption_parameters)).unwrap();
-
     let data = "c29tZSB0ZXh0c29tZSB0ZXh0c29tZSB0ZXh0c29tZSB0ZXh0c29tZSB0ZXh0c29tZSB0ZXh0c29tZSB0ZXh0c29tZSB0ZXh0c29tZSB0ZXh0c29tZSB0ZXh0c29tZSB0ZXh0c29tZSB0ZXh0c29tZSB0ZXh0c29tZSB0ZXh0c29tZSB0ZXh0c29tZSB0ZXh0c29tZSB0ZXh0c29tZSB0ZXh0c29tZSB0ZXh0c29tZSB0ZXh0c29tZSB0ZXh0c29tZSB0ZXh0c29tZSB0ZXh0c29tZSB0ZXh0c29tZSB0ZXh0c29tZSB0ZXh0c29tZSB0ZXh0c29tZSB0ZXh0c29tZSB0ZXh0c29tZSB0ZXh0c29tZSB0ZXh0c29tZSB0ZXh0c29tZSB0ZXh0c29tZSB0ZXh0";
 
 
@@ -82,15 +78,4 @@ fn signing() {
     assert!(verifier.verify(signature.as_ref()).unwrap())
 
     //TODO:
-}
-
-#[test]
-fn verification() {
-    // path needs to be accessible by user with write permission for initial setup
-    let relative_path_to_working_directory_for_storing_encryption_parameters = "/test/encryption_parameters/";
-    // it will read encryption params like public, private keys and passphrase or create them
-    let params = setup_encryption(Some(relative_path_to_working_directory_for_storing_encryption_parameters)).unwrap();
-
-    let data = "c29tZSB0ZXh0";
-    //TODO
 }
