@@ -1,8 +1,21 @@
 [package]
 name = "crypto-ext"
-version = "0.1.0"
+version = "0.0.1"
 edition = "2021"
+homepage = "https://github.com/bohdaq/crypto-ext"
+repository = "https://github.com/bohdaq/crypto-ext"
+readme = "README.md"
+description = "Set of cryptographic functions to encrypt, decrypt, sign, verify data"
+edition = "2021"
+rust-version = "1.64"
+authors = ["Bohdan Tsap <bohdan.tsap@tutanota.com>"]
+keywords = ["encrypt", "decrypt", "sign", "verify", "digest"]
+categories = ["cryptography", "caching", "game-development", "web-programming"]
+license = "MIT OR Apache-2.0 OR ISC OR LGPL-3.0-or-later OR CC-BY-4.0"
+
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+sha256 = { version="1.1.1" }
+openssl = { version="0.10.42", features = ["vendored"] }
