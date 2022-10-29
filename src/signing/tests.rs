@@ -3,7 +3,7 @@ use openssl::dsa::Dsa;
 use openssl::hash::MessageDigest;
 use openssl::pkey::PKey;
 use openssl::sign::{Signer, Verifier};
-use crate::signing::setup_signature;
+use crate::signing::{setup_signature, sign};
 
 
 #[test]
@@ -55,6 +55,7 @@ fn signing() {
 
     assert!(verifier.verify(signature.as_ref()).unwrap());
 
-    setup_signature(Some("/test/signature_parameters/")).unwrap();
+    let params = setup_signature(Some("/test/signature_parameters/")).unwrap();
+    let signature = sign(params, data.as_bytes());
     //TODO:
 }

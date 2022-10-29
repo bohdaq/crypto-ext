@@ -1,4 +1,8 @@
+use openssl::bn::{BigNum, BigNumRef};
 use openssl::dsa::Dsa;
+use openssl::hash::MessageDigest;
+use openssl::pkey::PKey;
+use openssl::sign::Signer;
 use crate::encryption::{generate_passphrase, get_path_relative_to_working_directory, get_static_filepath, read_or_create_and_write};
 
 #[cfg(test)]
@@ -106,9 +110,21 @@ pub fn get_or_create_value_at_path(path: &str, value: &str) -> Result<String, St
     Ok(passphrase)
 }
 
-pub fn sign(private_key: &str, passphrase: &str, data: &[u8]) -> String {
-    //TODO:
-    "".to_string()
+pub fn sign(params: SignatureParameters, data: &[u8]) -> Vec<u8> {
+    let private_key = BigNum::from_dec_str(params.dsa_private_key.as_str()).unwrap();
+    let public_key = BigNum::from_dec_str(params.dsa_public_key.as_str()).unwrap();
+    let p = BigNum::from_dec_str(params.dsa_p.as_str()).unwrap();
+    let q = BigNum::from_dec_str(params.dsa_q.as_str()).unwrap();
+    let g = BigNum::from_dec_str(params.dsa_g.as_str()).unwrap();
+
+    let private_key = Dsa::from_private_components(p,q,g,private_key,public_key).unwrap();
+    let private_key = PKey::from_dsa(private_key).unwrap();
+
+    let mut signer = Signer::new(MessageDigest::sha256(), &private_key).unwrap();
+    signer.update(data).unwrap();
+
+    let signature = signer.sign_to_vec().unwrap();
+    signature
 }
 
 pub fn verify(public_key: &str, data: &[u8], signature: &str) -> bool {
