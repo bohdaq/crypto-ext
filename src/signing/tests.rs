@@ -3,6 +3,7 @@ use openssl::dsa::Dsa;
 use openssl::hash::MessageDigest;
 use openssl::pkey::PKey;
 use openssl::sign::{Signer, Verifier};
+use crate::signing::setup_signature;
 
 
 #[test]
@@ -52,7 +53,8 @@ fn signing() {
     let mut verifier = Verifier::new(MessageDigest::sha256(), &public_key).unwrap();
     verifier.update(data.as_bytes()).unwrap();
 
-    assert!(verifier.verify(signature.as_ref()).unwrap())
+    assert!(verifier.verify(signature.as_ref()).unwrap());
 
+    setup_signature(Some("/test/signature_parameters/")).unwrap();
     //TODO:
 }
