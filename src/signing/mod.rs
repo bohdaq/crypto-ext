@@ -2,7 +2,7 @@ use openssl::bn::{BigNum, BigNumRef};
 use openssl::dsa::Dsa;
 use openssl::hash::MessageDigest;
 use openssl::pkey::PKey;
-use openssl::sign::Signer;
+use openssl::sign::{Signer, Verifier};
 use crate::encryption::{generate_passphrase, get_path_relative_to_working_directory, get_static_filepath, read_or_create_and_write};
 
 #[cfg(test)]
@@ -135,6 +135,23 @@ pub fn sign(params: SignatureParameters, data: &[u8]) -> Vec<u8> {
 }
 
 pub fn verify(params: VerificationParameters, data: &[u8], signature: Vec<u8>) -> bool {
-    //TODO
-    false
+    let public_key = BigNum::from_dec_str(params.dsa_public_key.as_str()).unwrap();
+    let p = BigNum::from_dec_str(params.dsa_p.as_str()).unwrap();
+    let q = BigNum::from_dec_str(params.dsa_q.as_str()).unwrap();
+    let g = BigNum::from_dec_str(params.dsa_g.as_str()).unwrap();
+    
+    let public_key = Dsa::from_public_components(
+        p,
+        q,
+        g,
+        public_key,
+    ).unwrap();
+
+    let public_key = PKey::from_dsa(public_key).unwrap();
+
+    let mut verifier = Verifier::new(MessageDigest::sha256(), &public_key).unwrap();
+    verifier.update(data).unwrap();
+    let is_verified = verifier.verify(signature.as_ref()).unwrap();
+
+    is_verified
 }

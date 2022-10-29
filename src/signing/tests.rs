@@ -3,7 +3,7 @@ use openssl::dsa::Dsa;
 use openssl::hash::MessageDigest;
 use openssl::pkey::PKey;
 use openssl::sign::{Signer, Verifier};
-use crate::signing::{setup_signature, sign};
+use crate::signing::{setup_signature, sign, VerificationParameters, verify};
 
 
 #[test]
@@ -57,5 +57,15 @@ fn signing() {
 
     let params = setup_signature(Some("/test/signature_parameters/")).unwrap();
     let signature = sign(params, data.as_bytes());
-    //TODO:
+
+    let params = setup_signature(Some("/test/signature_parameters/")).unwrap();
+    let verification_params = VerificationParameters {
+        dsa_p: params.dsa_p,
+        dsa_q: params.dsa_q,
+        dsa_g: params.dsa_g,
+        dsa_public_key: params.dsa_public_key,
+    };
+
+    let is_verified = verify(verification_params, data.as_bytes(), signature);
+    assert!(is_verified);
 }
