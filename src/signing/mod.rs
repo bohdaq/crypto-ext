@@ -139,7 +139,7 @@ pub fn verify(params: VerificationParameters, data: &[u8], signature: Vec<u8>) -
     let p = BigNum::from_dec_str(params.dsa_p.as_str()).unwrap();
     let q = BigNum::from_dec_str(params.dsa_q.as_str()).unwrap();
     let g = BigNum::from_dec_str(params.dsa_g.as_str()).unwrap();
-    
+
     let public_key = Dsa::from_public_components(
         p,
         q,
