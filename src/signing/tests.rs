@@ -1,8 +1,3 @@
-use openssl::bn::BigNumRef;
-use openssl::dsa::Dsa;
-use openssl::hash::MessageDigest;
-use openssl::pkey::PKey;
-use openssl::sign::{Signer, Verifier};
 use crate::signing::{setup_signature, sign, VerificationParameters, verify};
 
 

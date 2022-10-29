@@ -1,9 +1,9 @@
-use openssl::bn::{BigNum, BigNumRef};
+use openssl::bn::{BigNum};
 use openssl::dsa::Dsa;
 use openssl::hash::MessageDigest;
 use openssl::pkey::PKey;
 use openssl::sign::{Signer, Verifier};
-use crate::encryption::{generate_passphrase, get_path_relative_to_working_directory, get_static_filepath, read_or_create_and_write};
+use crate::encryption::{get_path_relative_to_working_directory, get_static_filepath, read_or_create_and_write};
 
 #[cfg(test)]
 mod tests;
