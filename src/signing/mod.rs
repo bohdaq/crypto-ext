@@ -18,6 +18,13 @@ pub struct SignatureParameters {
     pub dsa_public_key : String,
 }
 
+pub struct VerificationParameters {
+    pub dsa_p : String,
+    pub dsa_q : String,
+    pub dsa_g : String,
+    pub dsa_public_key : String,
+}
+
 pub fn setup_signature(path_to_encryption_parameters: Option<&str>) -> Result<SignatureParameters, String> {
     let dsa_ref = Dsa::generate(DSA_SIZE).unwrap();
     let p = dsa_ref.p();
@@ -127,7 +134,7 @@ pub fn sign(params: SignatureParameters, data: &[u8]) -> Vec<u8> {
     signature
 }
 
-pub fn verify(public_key: &str, data: &[u8], signature: &str) -> bool {
+pub fn verify(params: VerificationParameters, data: &[u8], signature: Vec<u8>) -> bool {
     //TODO
     false
 }
