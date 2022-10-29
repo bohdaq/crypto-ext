@@ -4,3 +4,8 @@
 .idea
 /target
 /Cargo.lock
+.dsa_g
+.dsa_p
+.dsa_q
+.dsa_private_key
+.dsa_public_key
