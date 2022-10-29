@@ -43,7 +43,7 @@ pub fn setup_signature(path_to_encryption_parameters: Option<&str>) -> Result<Si
     }
 
     let dsa_q_path = boxed_dsa_q_path.unwrap();
-    let boxed_q = get_or_create_value_at_path(dsa_q_path.as_str(), p.to_string().as_str());
+    let boxed_q = get_or_create_value_at_path(dsa_q_path.as_str(), q.to_string().as_str());
     if boxed_q.is_err() {
         return Err(boxed_q.err().unwrap());
     }
