@@ -1,4 +1,3 @@
-use std::fs;
 use openssl::bn::BigNumRef;
 use openssl::dsa::Dsa;
 use openssl::hash::MessageDigest;
@@ -32,9 +31,6 @@ fn signing() {
         BigNumRef::to_owned(private_key).unwrap(),
         BigNumRef::to_owned(public_key).unwrap(),
     ).unwrap();
-
-    let private_key_pem = private_key.private_key_to_pem().unwrap();
-    let public_key_pem = private_key.public_key_to_pem().unwrap();
 
 
     let private_key = PKey::from_dsa(private_key).unwrap();

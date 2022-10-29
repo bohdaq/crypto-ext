@@ -1,4 +1,4 @@
-use std::{env, fs};
+use std::{env};
 use std::fs::{File, OpenOptions};
 use std::io::{Read, Write};
 use std::path::Path;
@@ -7,9 +7,6 @@ use sha256::digest;
 use openssl::rsa::Padding;
 use openssl::rsa::Rsa;
 use openssl::symm::Cipher;
-use openssl::sign::{Signer};
-use openssl::pkey::PKey;
-use openssl::hash::MessageDigest;
 
 #[cfg(test)]
 mod tests;

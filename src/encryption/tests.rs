@@ -1,9 +1,3 @@
-use std::fs;
-use openssl::bn::BigNumRef;
-use openssl::dsa::Dsa;
-use openssl::hash::MessageDigest;
-use openssl::pkey::PKey;
-use openssl::sign::{Signer, Verifier};
 use crate::encryption::{decrypt, encrypt, setup_encryption};
 
 #[test]
