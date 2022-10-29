@@ -1,3 +1,4 @@
+use openssl::dsa::Dsa;
 use crate::encryption::{get_path_relative_to_working_directory, get_static_filepath};
 
 #[cfg(test)]
@@ -14,6 +15,14 @@ pub struct SignatureParameters {
 }
 
 pub fn setup_signature(path_to_encryption_parameters: Option<&str>) -> Result<SignatureParameters, String> {
+    let dsa_ref = Dsa::generate(DSA_SIZE).unwrap();
+    let p = dsa_ref.p();
+    let q = dsa_ref.q();
+    let g = dsa_ref.g();
+
+    let public_key = dsa_ref.pub_key();
+    let private_key = dsa_ref.priv_key();
+
     let relative_path = get_path_relative_to_working_directory(path_to_encryption_parameters, ".dsa_p");
     let boxed_dsa_p_path = get_static_filepath(relative_path.as_str());
     if boxed_dsa_p_path.is_err() {
