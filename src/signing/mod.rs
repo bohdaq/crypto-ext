@@ -48,10 +48,22 @@ pub fn setup_signature(path_to_encryption_parameters: Option<&str>) -> Result<Si
         return Err(boxed_q.err().unwrap());
     }
 
+    let relative_path = get_path_relative_to_working_directory(path_to_encryption_parameters, ".dsa_g");
+    let boxed_dsa_g_path = get_static_filepath(relative_path.as_str());
+    if boxed_dsa_g_path.is_err() {
+        return Err(boxed_dsa_g_path.err().unwrap());
+    }
+
+    let dsa_q_path = boxed_dsa_g_path.unwrap();
+    let boxed_g = get_or_create_value_at_path(dsa_q_path.as_str(), q.to_string().as_str());
+    if boxed_g.is_err() {
+        return Err(boxed_g.err().unwrap());
+    }
+
     let signature_parameters = SignatureParameters{
         dsa_p: boxed_p.unwrap(),
         dsa_q: boxed_q.unwrap(),
-        dsa_g: "".to_string(),
+        dsa_g: boxed_g.unwrap(),
         dsa_private_key: "".to_string(),
         dsa_public_key: "".to_string()
     };
