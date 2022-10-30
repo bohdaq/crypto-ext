@@ -74,11 +74,21 @@ pub fn setup_encryption(path_to_encryption_parameters: Option<&str>) -> Result<E
     Ok(params)
 }
 
-pub fn encrypt(public_key: &str, data: &[u8]) -> Vec<u8> {
-    let rsa = Rsa::public_key_from_pem(public_key.as_bytes()).unwrap();
+pub fn encrypt(public_key: &str, data: &[u8]) -> Result<Vec<u8>, String> {
+    let boxed_rsa = Rsa::public_key_from_pem(public_key.as_bytes());
+    if boxed_rsa.is_err() {
+        let message = boxed_rsa.err().unwrap().to_string();
+        return Err(message)
+    }
+    let rsa = boxed_rsa.unwrap();
     let mut buffer : Vec<u8> = vec![0; rsa.size() as usize];
-    let _ = rsa.public_encrypt(data, &mut buffer, Padding::PKCS1).unwrap();
-    buffer
+    let boxed_encrypt = rsa.public_encrypt(data, &mut buffer, Padding::PKCS1);
+    if boxed_encrypt.is_err() {
+        let message = boxed_encrypt.err().unwrap().to_string();
+        return Err(message)
+    }
+    let _ = boxed_encrypt.unwrap();
+    Ok(buffer)
 }
 
 pub fn decrypt(private_key: &str, passphrase: &str, data: &[u8]) -> Vec<u8> {
