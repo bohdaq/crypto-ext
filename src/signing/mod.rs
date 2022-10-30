@@ -125,7 +125,13 @@ pub fn sign(params: SignatureParameters, data: &[u8]) -> Result<Vec<u8>, String>
     let g = BigNum::from_dec_str(params.dsa_g.as_str()).unwrap();
 
     let private_key = Dsa::from_private_components(p,q,g,private_key,public_key).unwrap();
-    let private_key = PKey::from_dsa(private_key).unwrap();
+
+    let boxed_pkey_private = PKey::from_dsa(private_key);
+    if boxed_pkey_private.is_err() {
+        let message = boxed_pkey_private.err().unwrap().to_string();
+        return Err(message)
+    }
+    let private_key = boxed_pkey_private.unwrap();
 
     let boxed_signer = Signer::new(MessageDigest::sha256(), &private_key);
     if boxed_signer.is_err() {
