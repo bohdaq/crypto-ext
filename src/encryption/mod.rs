@@ -91,11 +91,21 @@ pub fn encrypt(public_key: &str, data: &[u8]) -> Result<Vec<u8>, String> {
     Ok(buffer)
 }
 
-pub fn decrypt(private_key: &str, passphrase: &str, data: &[u8]) -> Vec<u8> {
-    let rsa = Rsa::private_key_from_pem_passphrase(private_key.as_bytes(), passphrase.as_bytes()).unwrap();
+pub fn decrypt(private_key: &str, passphrase: &str, data: &[u8]) -> Result<Vec<u8>, String> {
+    let boxed_rsa = Rsa::private_key_from_pem_passphrase(private_key.as_bytes(), passphrase.as_bytes());
+    if boxed_rsa.is_err() {
+        let message = boxed_rsa.err().unwrap().to_string();
+        return Err(message)
+    }
+    let rsa = boxed_rsa.unwrap();
     let mut buffer: Vec<u8> = vec![0; rsa.size() as usize];
-    let _ = rsa.private_decrypt(data, &mut buffer, Padding::PKCS1).unwrap();
-    buffer
+    let boxed_decrypt = rsa.private_decrypt(data, &mut buffer, Padding::PKCS1);
+    if boxed_decrypt.is_err() {
+        let message = boxed_decrypt.err().unwrap().to_string();
+        return Err(message)
+    }
+    let _ = boxed_decrypt.unwrap();
+    Ok(buffer)
 }
 
 pub fn get_or_create_passphrase(path: &str) -> Result<String, String> {

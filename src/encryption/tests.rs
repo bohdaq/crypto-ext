@@ -12,7 +12,7 @@ fn encryption() {
     println!("data len: {}", data.as_bytes().len());
     let encrypted_u8 = encrypt(params.public_key.as_str(), data.as_bytes()).unwrap();
 
-    let decrypted_u8 = decrypt(params.private_key.as_str(), params.passphrase.as_str(), encrypted_u8.as_ref());
+    let decrypted_u8 = decrypt(params.private_key.as_str(), params.passphrase.as_str(), encrypted_u8.as_ref()).unwrap();
 
     let decrypted = String::from_utf8(decrypted_u8).unwrap();
 
