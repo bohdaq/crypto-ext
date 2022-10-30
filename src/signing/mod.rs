@@ -186,7 +186,7 @@ pub fn sign(params: SignatureParameters, data: &[u8]) -> Result<Vec<u8>, String>
     Ok(signature)
 }
 
-pub fn verify(params: VerificationParameters, data: &[u8], signature: Vec<u8>) -> bool {
+pub fn verify(params: VerificationParameters, data: &[u8], signature: Vec<u8>) -> Result<bool, String> {
     let public_key = BigNum::from_dec_str(params.dsa_public_key.as_str()).unwrap();
     let p = BigNum::from_dec_str(params.dsa_p.as_str()).unwrap();
     let q = BigNum::from_dec_str(params.dsa_q.as_str()).unwrap();
@@ -203,9 +203,15 @@ pub fn verify(params: VerificationParameters, data: &[u8], signature: Vec<u8>) -
 
     let mut verifier = Verifier::new(MessageDigest::sha256(), &public_key).unwrap();
     verifier.update(data).unwrap();
-    let is_verified = verifier.verify(signature.as_ref()).unwrap();
 
-    is_verified
+    let boxed_verify = verifier.verify(signature.as_ref());
+    if boxed_verify.is_err() {
+        let message = boxed_verify.err().unwrap().to_string();
+        return Err(message)
+    }
+    let is_verified = boxed_verify.unwrap();
+
+    Ok(is_verified)
 }
 
 pub fn get_big_number(number: &str) -> Result<BigNum, String> {
