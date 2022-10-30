@@ -120,7 +120,13 @@ pub fn get_or_create_value_at_path(path: &str, value: &str) -> Result<String, St
 pub fn sign(params: SignatureParameters, data: &[u8]) -> Result<Vec<u8>, String> {
     let private_key = BigNum::from_dec_str(params.dsa_private_key.as_str()).unwrap();
     let public_key = BigNum::from_dec_str(params.dsa_public_key.as_str()).unwrap();
-    let p = BigNum::from_dec_str(params.dsa_p.as_str()).unwrap();
+
+    let boxed_p = get_big_number(params.dsa_p.as_str());
+    if boxed_p.is_err() {
+        let message = boxed_p.err().unwrap().to_string();
+        return Err(message)
+    }
+    let p = boxed_p.unwrap();
 
     let boxed_q = get_big_number(params.dsa_q.as_str());
     if boxed_q.is_err() {
