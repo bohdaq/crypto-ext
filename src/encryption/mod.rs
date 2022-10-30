@@ -22,7 +22,7 @@ pub struct EncryptionParameters {
 }
 
 pub fn setup_encryption(path_to_encryption_parameters: Option<&str>) -> Result<EncryptionParameters, String> {
-    let relative_path = get_path_relative_to_working_directory(path_to_encryption_parameters, ".passphrase");
+    let relative_path = get_path_relative_to_working_directory(path_to_encryption_parameters, ".rsa_passphrase");
     let boxed_passphrase_path = get_static_filepath(relative_path.as_str());
     if boxed_passphrase_path.is_err() {
         return Err(boxed_passphrase_path.err().unwrap());
@@ -37,7 +37,7 @@ pub fn setup_encryption(path_to_encryption_parameters: Option<&str>) -> Result<E
     let passphrase = boxed_passphrase.unwrap();
 
 
-    let relative_path = get_path_relative_to_working_directory(path_to_encryption_parameters, ".public_key");
+    let relative_path = get_path_relative_to_working_directory(path_to_encryption_parameters, ".rsa_public_key");
     let boxed_public_key_path = get_static_filepath(relative_path.as_str());
     if boxed_public_key_path.is_err() {
         return Err(boxed_public_key_path.err().unwrap());
@@ -45,7 +45,7 @@ pub fn setup_encryption(path_to_encryption_parameters: Option<&str>) -> Result<E
     let public_key_path = boxed_public_key_path.unwrap();
 
 
-    let relative_path = get_path_relative_to_working_directory(path_to_encryption_parameters, ".private_key");
+    let relative_path = get_path_relative_to_working_directory(path_to_encryption_parameters, ".rsa_private_key");
     let boxed_private_key_path = get_static_filepath(relative_path.as_str());
     if boxed_private_key_path.is_err() {
         return Err(boxed_private_key_path.err().unwrap());

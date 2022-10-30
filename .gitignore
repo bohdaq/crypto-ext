@@ -1,6 +1,6 @@
-.passphrase
-.private_key
-.public_key
+.rsa_passphrase
+.rsa_private_key
+.rsa_public_key
 .idea
 /target
 /Cargo.lock
