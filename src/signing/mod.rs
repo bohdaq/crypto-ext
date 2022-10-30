@@ -202,9 +202,9 @@ pub fn verify(params: VerificationParameters, data: &[u8], signature: Vec<u8>) -
         let message = boxed_dsa.err().unwrap().to_string();
         return Err(message)
     }
-    let public_key = boxed_dsa.unwrap();
+    let dsa_public = boxed_dsa.unwrap();
 
-    let boxed_pkey_public = PKey::from_dsa(public_key);
+    let boxed_pkey_public = PKey::from_dsa(dsa_public);
     if boxed_pkey_public.is_err() {
         let message = boxed_pkey_public.err().unwrap().to_string();
         return Err(message)
