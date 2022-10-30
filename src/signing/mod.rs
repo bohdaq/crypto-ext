@@ -117,7 +117,7 @@ pub fn get_or_create_value_at_path(path: &str, value: &str) -> Result<String, St
     Ok(passphrase)
 }
 
-pub fn sign(params: SignatureParameters, data: &[u8]) -> Vec<u8> {
+pub fn sign(params: SignatureParameters, data: &[u8]) -> Result<Vec<u8>, String> {
     let private_key = BigNum::from_dec_str(params.dsa_private_key.as_str()).unwrap();
     let public_key = BigNum::from_dec_str(params.dsa_public_key.as_str()).unwrap();
     let p = BigNum::from_dec_str(params.dsa_p.as_str()).unwrap();
@@ -131,7 +131,7 @@ pub fn sign(params: SignatureParameters, data: &[u8]) -> Vec<u8> {
     signer.update(data).unwrap();
 
     let signature = signer.sign_to_vec().unwrap();
-    signature
+    Ok(signature)
 }
 
 pub fn verify(params: VerificationParameters, data: &[u8], signature: Vec<u8>) -> bool {
