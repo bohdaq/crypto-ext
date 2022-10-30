@@ -192,12 +192,17 @@ pub fn verify(params: VerificationParameters, data: &[u8], signature: Vec<u8>) -
     let q = BigNum::from_dec_str(params.dsa_q.as_str()).unwrap();
     let g = BigNum::from_dec_str(params.dsa_g.as_str()).unwrap();
 
-    let public_key = Dsa::from_public_components(
+    let boxed_dsa = Dsa::from_public_components(
         p,
         q,
         g,
         public_key,
-    ).unwrap();
+    );
+    if boxed_dsa.is_err() {
+        let message = boxed_dsa.err().unwrap().to_string();
+        return Err(message)
+    }
+    let public_key = boxed_dsa.unwrap();
 
     let boxed_pkey_public = PKey::from_dsa(public_key);
     if boxed_pkey_public.is_err() {
