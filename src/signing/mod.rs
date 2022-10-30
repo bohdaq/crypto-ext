@@ -134,7 +134,12 @@ pub fn sign(params: SignatureParameters, data: &[u8]) -> Result<Vec<u8>, String>
     }
     let mut signer = boxed_signer.unwrap();
 
-    signer.update(data).unwrap();
+    let boxed_update = signer.update(data);
+    if boxed_update.is_err() {
+        let message = boxed_update.err().unwrap().to_string();
+        return Err(message)
+    }
+    boxed_update.unwrap();
 
     let signature = signer.sign_to_vec().unwrap();
     Ok(signature)
