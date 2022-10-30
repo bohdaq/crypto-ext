@@ -199,7 +199,12 @@ pub fn verify(params: VerificationParameters, data: &[u8], signature: Vec<u8>) -
         public_key,
     ).unwrap();
 
-    let public_key = PKey::from_dsa(public_key).unwrap();
+    let boxed_pkey_public = PKey::from_dsa(public_key);
+    if boxed_pkey_public.is_err() {
+        let message = boxed_pkey_public.err().unwrap().to_string();
+        return Err(message)
+    }
+    let public_key = boxed_pkey_public.unwrap();
 
     let boxed_verifier = Verifier::new(MessageDigest::sha256(), &public_key);
     if boxed_verifier.is_err() {
