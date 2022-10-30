@@ -124,9 +124,10 @@ pub fn sign(params: SignatureParameters, data: &[u8]) -> Result<Vec<u8>, String>
     let q = BigNum::from_dec_str(params.dsa_q.as_str()).unwrap();
     let g = BigNum::from_dec_str(params.dsa_g.as_str()).unwrap();
 
-    let private_key = Dsa::from_private_components(p,q,g,private_key,public_key).unwrap();
+    let boxed_dsa_private = Dsa::from_private_components(p, q, g, private_key, public_key);
+    let dsa_private = boxed_dsa_private.unwrap();
 
-    let boxed_pkey_private = PKey::from_dsa(private_key);
+    let boxed_pkey_private = PKey::from_dsa(dsa_private);
     if boxed_pkey_private.is_err() {
         let message = boxed_pkey_private.err().unwrap().to_string();
         return Err(message)
