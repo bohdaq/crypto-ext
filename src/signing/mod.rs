@@ -122,7 +122,13 @@ pub fn sign(params: SignatureParameters, data: &[u8]) -> Result<Vec<u8>, String>
     let public_key = BigNum::from_dec_str(params.dsa_public_key.as_str()).unwrap();
     let p = BigNum::from_dec_str(params.dsa_p.as_str()).unwrap();
     let q = BigNum::from_dec_str(params.dsa_q.as_str()).unwrap();
-    let g = BigNum::from_dec_str(params.dsa_g.as_str()).unwrap();
+
+    let boxed_g = get_big_number(params.dsa_g.as_str());
+    if boxed_g.is_err() {
+        let message = boxed_g.err().unwrap().to_string();
+        return Err(message)
+    }
+    let g = boxed_g.unwrap();
 
     let boxed_dsa_private = Dsa::from_private_components(p, q, g, private_key, public_key);
     let dsa_private = boxed_dsa_private.unwrap();
@@ -177,4 +183,14 @@ pub fn verify(params: VerificationParameters, data: &[u8], signature: Vec<u8>) -
     let is_verified = verifier.verify(signature.as_ref()).unwrap();
 
     is_verified
+}
+
+pub fn get_big_number(number: &str) -> Result<BigNum, String> {
+    let boxed_big_number = BigNum::from_dec_str(number);
+    if boxed_big_number.is_err() {
+        let message = boxed_big_number.err().unwrap().to_string();
+        return Err(message)
+    }
+    let big_number = boxed_big_number.unwrap();
+    Ok(big_number)
 }
