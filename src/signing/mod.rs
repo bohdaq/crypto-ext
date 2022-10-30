@@ -118,7 +118,12 @@ pub fn get_or_create_value_at_path(path: &str, value: &str) -> Result<String, St
 }
 
 pub fn sign(params: SignatureParameters, data: &[u8]) -> Result<Vec<u8>, String> {
-    let private_key = BigNum::from_dec_str(params.dsa_private_key.as_str()).unwrap();
+    let boxed_private_key = get_big_number(params.dsa_private_key.as_str());
+    if boxed_private_key.is_err() {
+        let message = boxed_private_key.err().unwrap().to_string();
+        return Err(message)
+    }
+    let private_key = boxed_private_key.unwrap();
 
     let boxed_public_key = get_big_number(params.dsa_public_key.as_str());
     if boxed_public_key.is_err() {
@@ -156,9 +161,9 @@ pub fn sign(params: SignatureParameters, data: &[u8]) -> Result<Vec<u8>, String>
         let message = boxed_pkey_private.err().unwrap().to_string();
         return Err(message)
     }
-    let private_key = boxed_pkey_private.unwrap();
+    let pkey_private = boxed_pkey_private.unwrap();
 
-    let boxed_signer = Signer::new(MessageDigest::sha256(), &private_key);
+    let boxed_signer = Signer::new(MessageDigest::sha256(), &pkey_private);
     if boxed_signer.is_err() {
         let message = boxed_signer.err().unwrap().to_string();
         return Err(message)
