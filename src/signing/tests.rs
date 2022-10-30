@@ -16,6 +16,6 @@ fn signing() {
         dsa_public_key: params.dsa_public_key,
     };
 
-    let is_verified = verify(verification_params, data.as_bytes(), signature);
+    let is_verified = verify(verification_params, data.as_bytes(), signature).unwrap();
     assert!(is_verified);
 }
