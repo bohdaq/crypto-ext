@@ -29,7 +29,7 @@ pub fn setup_signature(path_to_encryption_parameters: Option<&str>) -> Result<Si
     let dsa_ref = Dsa::generate(DSA_SIZE).unwrap();
     let private_key = dsa_ref.priv_key();
 
-    let (p,q,g, public_key) = setup_private_components(&dsa_ref, path_to_encryption_parameters).unwrap();
+    let (p,q,g, public_key) = setup_public_components(&dsa_ref, path_to_encryption_parameters).unwrap();
 
     let relative_path = get_path_relative_to_working_directory(path_to_encryption_parameters, ".dsa_private_key");
     let boxed_private_key_path = get_static_filepath(relative_path.as_str());
@@ -53,7 +53,7 @@ pub fn setup_signature(path_to_encryption_parameters: Option<&str>) -> Result<Si
     Ok(signature_parameters)
 }
 
-pub fn setup_private_components(dsa_ref: &Dsa<Private>, path_to_encryption_parameters: Option<&str>) -> Result<(String, String, String, String), String> {
+pub fn setup_public_components(dsa_ref: &Dsa<Private>, path_to_encryption_parameters: Option<&str>) -> Result<(String, String, String, String), String> {
     let p = dsa_ref.p();
     let q = dsa_ref.q();
     let g = dsa_ref.g();
