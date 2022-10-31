@@ -11,15 +11,15 @@ mod tests;
 const RSA_SIZE: u32 = 4096;
 
 pub struct EncryptionParameters {
-    pub rsa_passphrase: String,
-    pub rsa_private_key_pem: String,
     pub rsa_public_key_pem: String,
-    pub rsa_padding: String,
-    pub rsa_cipher: String,
-    pub rsa_size: u32,
 }
 
-pub fn setup_encryption(path_to_encryption_parameters: Option<&str>) -> Result<EncryptionParameters, String> {
+pub struct DecryptionParameters {
+    pub rsa_passphrase: String,
+    pub rsa_private_key_pem: String,
+}
+
+pub fn setup_encryption(path_to_encryption_parameters: Option<&str>) -> Result<(EncryptionParameters, DecryptionParameters), String> {
     let relative_path = get_path_relative_to_working_directory(path_to_encryption_parameters, ".rsa_passphrase");
     let boxed_passphrase_path = get_static_filepath(relative_path.as_str());
     if boxed_passphrase_path.is_err() {
@@ -58,23 +58,20 @@ pub fn setup_encryption(path_to_encryption_parameters: Option<&str>) -> Result<E
 
     let (private_key, public_key) = boxed_keys.unwrap();
 
-    let padding = "PKCS1".to_string();
-    let cipher = "aes_128_cbc".to_string();
-
-    let params = EncryptionParameters {
-        rsa_passphrase: passphrase,
-        rsa_private_key_pem: private_key,
+    let encryption_params = EncryptionParameters {
         rsa_public_key_pem: public_key,
-        rsa_padding: padding,
-        rsa_cipher: cipher,
-        rsa_size: RSA_SIZE,
     };
 
-    Ok(params)
+    let decryption_params = DecryptionParameters {
+        rsa_passphrase: passphrase,
+        rsa_private_key_pem: private_key
+    };
+
+    Ok((encryption_params, decryption_params))
 }
 
-pub fn encrypt(public_key: &str, data: &[u8]) -> Result<Vec<u8>, String> {
-    let boxed_rsa = Rsa::public_key_from_pem(public_key.as_bytes());
+pub fn encrypt(params: EncryptionParameters, data: &[u8]) -> Result<Vec<u8>, String> {
+    let boxed_rsa = Rsa::public_key_from_pem(params.rsa_public_key_pem.as_bytes());
     if boxed_rsa.is_err() {
         let message = boxed_rsa.err().unwrap().to_string();
         return Err(message)
@@ -90,8 +87,8 @@ pub fn encrypt(public_key: &str, data: &[u8]) -> Result<Vec<u8>, String> {
     Ok(buffer)
 }
 
-pub fn decrypt(private_key: &str, passphrase: &str, data: &[u8]) -> Result<Vec<u8>, String> {
-    let boxed_rsa = Rsa::private_key_from_pem_passphrase(private_key.as_bytes(), passphrase.as_bytes());
+pub fn decrypt(params: DecryptionParameters, data: &[u8]) -> Result<Vec<u8>, String> {
+    let boxed_rsa = Rsa::private_key_from_pem_passphrase(params.rsa_private_key_pem.as_bytes(), params.rsa_passphrase.as_bytes());
     if boxed_rsa.is_err() {
         let message = boxed_rsa.err().unwrap().to_string();
         return Err(message)
