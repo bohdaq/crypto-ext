@@ -10,9 +10,9 @@ fn encryption() {
     //maximum 501 bytes at once to be encrypted
     let data = "Some random textSome random textSome random textSome random textSome random textSome random textSome random textSomeeSome random textSome random textSome random textSome random textSome random textSome random textSome random textSomeeSome random textSome random textSome random textSome random textSome random textSome random textSome random textSomeeSome random textSome random textSome random textSome random textSome random textSome random textSome random textSomee123textSomee123textSomee123textSo";
     println!("data len: {}", data.as_bytes().len());
-    let encrypted_u8 = encrypt(params.public_key.as_str(), data.as_bytes()).unwrap();
+    let encrypted_u8 = encrypt(params.rsa_public_key_pem.as_str(), data.as_bytes()).unwrap();
 
-    let decrypted_u8 = decrypt(params.private_key.as_str(), params.passphrase.as_str(), encrypted_u8.as_ref()).unwrap();
+    let decrypted_u8 = decrypt(params.rsa_private_key_pem.as_str(), params.rsa_passphrase.as_str(), encrypted_u8.as_ref()).unwrap();
 
     let decrypted = String::from_utf8(decrypted_u8).unwrap();
 

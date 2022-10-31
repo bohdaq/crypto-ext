@@ -11,12 +11,12 @@ mod tests;
 const RSA_SIZE: u32 = 4096;
 
 pub struct EncryptionParameters {
-    pub passphrase: String,
-    pub private_key: String,
-    pub public_key: String,
-    pub padding: String,
-    pub cipher: String,
-    pub size: u32,
+    pub rsa_passphrase: String,
+    pub rsa_private_key_pem: String,
+    pub rsa_public_key_pem: String,
+    pub rsa_padding: String,
+    pub rsa_cipher: String,
+    pub rsa_size: u32,
 }
 
 pub fn setup_encryption(path_to_encryption_parameters: Option<&str>) -> Result<EncryptionParameters, String> {
@@ -62,12 +62,12 @@ pub fn setup_encryption(path_to_encryption_parameters: Option<&str>) -> Result<E
     let cipher = "aes_128_cbc".to_string();
 
     let params = EncryptionParameters {
-        passphrase,
-        private_key,
-        public_key,
-        padding,
-        cipher,
-        size: RSA_SIZE,
+        rsa_passphrase: passphrase,
+        rsa_private_key_pem: private_key,
+        rsa_public_key_pem: public_key,
+        rsa_padding: padding,
+        rsa_cipher: cipher,
+        rsa_size: RSA_SIZE,
     };
 
     Ok(params)
