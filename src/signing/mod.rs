@@ -27,9 +27,22 @@ pub struct VerificationParameters {
 
 pub fn setup_signature(path_to_encryption_parameters: Option<&str>) -> Result<SignatureParameters, String> {
     let dsa_ref = Dsa::generate(DSA_SIZE).unwrap();
-    let private_key = dsa_ref.priv_key();
 
     let (p,q,g, public_key) = setup_public_components(&dsa_ref, path_to_encryption_parameters).unwrap();
+    let private_key = setup_private_key(&dsa_ref, path_to_encryption_parameters).unwrap();
+
+    let signature_parameters = SignatureParameters{
+        dsa_p: p,
+        dsa_q: q,
+        dsa_g: g,
+        dsa_private_key: private_key,
+        dsa_public_key: public_key,
+    };
+    Ok(signature_parameters)
+}
+
+pub fn setup_private_key(dsa_ref: &Dsa<Private>, path_to_encryption_parameters: Option<&str>) -> Result<String, String> {
+    let private_key = dsa_ref.priv_key();
 
     let relative_path = get_path_relative_to_working_directory(path_to_encryption_parameters, ".dsa_private_key");
     let boxed_private_key_path = get_static_filepath(relative_path.as_str());
@@ -42,15 +55,8 @@ pub fn setup_signature(path_to_encryption_parameters: Option<&str>) -> Result<Si
     if boxed_private_key.is_err() {
         return Err(boxed_private_key.err().unwrap());
     }
-
-    let signature_parameters = SignatureParameters{
-        dsa_p: p,
-        dsa_q: q,
-        dsa_g: g,
-        dsa_private_key: boxed_private_key.unwrap(),
-        dsa_public_key: public_key,
-    };
-    Ok(signature_parameters)
+    let private_key = boxed_private_key.unwrap();
+    Ok(private_key)
 }
 
 pub fn setup_public_components(dsa_ref: &Dsa<Private>, path_to_encryption_parameters: Option<&str>) -> Result<(String, String, String, String), String> {
