@@ -8,7 +8,7 @@ use crate::{get_path_relative_to_working_directory, get_static_filepath, read_or
 #[cfg(test)]
 mod tests;
 
-pub const RSA_SIZE: u32 = 4096;
+const RSA_SIZE: u32 = 4096;
 
 pub struct EncryptionParameters {
     pub passphrase: String,
@@ -16,6 +16,7 @@ pub struct EncryptionParameters {
     pub public_key: String,
     pub padding: String,
     pub cipher: String,
+    pub size: u32,
 }
 
 pub fn setup_encryption(path_to_encryption_parameters: Option<&str>) -> Result<EncryptionParameters, String> {
@@ -66,6 +67,7 @@ pub fn setup_encryption(path_to_encryption_parameters: Option<&str>) -> Result<E
         public_key,
         padding,
         cipher,
+        size: RSA_SIZE,
     };
 
     Ok(params)
