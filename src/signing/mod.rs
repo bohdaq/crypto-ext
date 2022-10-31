@@ -3,7 +3,7 @@ use openssl::dsa::Dsa;
 use openssl::hash::MessageDigest;
 use openssl::pkey::{PKey, Private};
 use openssl::sign::{Signer, Verifier};
-use crate::encryption::{get_path_relative_to_working_directory, get_static_filepath, read_or_create_and_write};
+use crate::{get_path_relative_to_working_directory, get_static_filepath, read_or_create_and_write};
 
 #[cfg(test)]
 mod tests;
