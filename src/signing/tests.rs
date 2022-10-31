@@ -1,4 +1,4 @@
-use crate::signing::{setup_signature, sign, VerificationParameters, verify};
+use crate::signing::{setup_signature, setup_verification, sign, verify};
 
 
 #[test]
@@ -8,14 +8,7 @@ fn signing() {
     let signature_params = setup_signature(Some("/test/signature_parameters/")).unwrap();
     let signature = sign(signature_params, data.as_bytes()).unwrap();
 
-    let params = setup_signature(Some("/test/signature_parameters/")).unwrap();
-    let verification_params = VerificationParameters {
-        dsa_p: params.dsa_p,
-        dsa_q: params.dsa_q,
-        dsa_g: params.dsa_g,
-        dsa_public_key: params.dsa_public_key,
-    };
-
+    let verification_params = setup_verification(Some("/test/signature_parameters/")).unwrap();
     let is_verified = verify(verification_params, data.as_bytes(), signature).unwrap();
     assert!(is_verified);
 }

@@ -31,7 +31,7 @@ pub fn setup_signature(path_to_encryption_parameters: Option<&str>) -> Result<Si
     let (dsa_p,dsa_q,dsa_g, dsa_public_key) = setup_public_components(&dsa_ref, path_to_encryption_parameters).unwrap();
     let dsa_private_key = setup_private_key(&dsa_ref, path_to_encryption_parameters).unwrap();
 
-    let signature_parameters = SignatureParameters{
+    let signature_parameters = SignatureParameters {
         dsa_p,
         dsa_q,
         dsa_g,
@@ -39,6 +39,20 @@ pub fn setup_signature(path_to_encryption_parameters: Option<&str>) -> Result<Si
         dsa_public_key,
     };
     Ok(signature_parameters)
+}
+
+pub fn setup_verification(path_to_encryption_parameters: Option<&str>) -> Result<VerificationParameters, String> {
+    let dsa_ref = Dsa::generate(DSA_SIZE).unwrap();
+
+    let (dsa_p,dsa_q,dsa_g, dsa_public_key) = setup_public_components(&dsa_ref, path_to_encryption_parameters).unwrap();
+
+    let verification_parameters = VerificationParameters {
+        dsa_p,
+        dsa_q,
+        dsa_g,
+        dsa_public_key,
+    };
+    Ok(verification_parameters)
 }
 
 pub fn setup_private_key(dsa_ref: &Dsa<Private>, path_to_encryption_parameters: Option<&str>) -> Result<String, String> {
