@@ -93,14 +93,42 @@ pub fn get_encryption_params(path_to_encryption_parameters: Option<&str>) -> Res
     Ok(encryption_params)
 }
 
-pub fn setup_decryption(path_to_encryption_parameters: Option<&str>) -> Result<DecryptionParameters, String> {
-    let boxed_params = setup(path_to_encryption_parameters);
-    if boxed_params.is_err() {
-        return Err(boxed_params.err().unwrap());
+pub fn get_decryption_params(path_to_encryption_parameters: Option<&str>) -> Result<DecryptionParameters, String> {
+    let relative_path = get_path_relative_to_working_directory(path_to_encryption_parameters, ".rsa_passphrase");
+    let boxed_passphrase_path = get_static_filepath(relative_path.as_str());
+    if boxed_passphrase_path.is_err() {
+        return Err(boxed_passphrase_path.err().unwrap());
     }
+    let passphrase_path = boxed_passphrase_path.unwrap();
 
-    let (_, params) = boxed_params.unwrap();
-    Ok(params)
+
+    let boxed_passphrase = get_or_create_passphrase(passphrase_path.as_str());
+    if boxed_passphrase.is_err() {
+        return Err(boxed_passphrase.err().unwrap());
+    }
+    let passphrase = boxed_passphrase.unwrap();
+
+
+    let relative_path = get_path_relative_to_working_directory(path_to_encryption_parameters, ".rsa_private_key");
+    let boxed_private_key_path = get_static_filepath(relative_path.as_str());
+    if boxed_private_key_path.is_err() {
+        return Err(boxed_private_key_path.err().unwrap());
+    }
+    let private_key_path = boxed_private_key_path.unwrap();
+
+    let boxed_private_key = read_file(private_key_path.as_str());
+    if boxed_private_key.is_err() {
+        let message = boxed_private_key.err().unwrap();
+        return Err(message)
+    }
+    let private_key = boxed_private_key.unwrap();
+
+    let decryption_params = DecryptionParameters {
+        rsa_passphrase: passphrase,
+        rsa_private_key_pem: private_key
+    };
+
+    Ok(decryption_params)
 }
 
 
