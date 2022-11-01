@@ -22,3 +22,24 @@ fn encryption() {
     //decrypted data will contain trailing \0, removing them
     assert_eq!(data.to_string(), decrypted.replace('\0', ""));
 }
+
+#[test]
+fn encryption_alternative() {
+    let data = "Some random textSome random textSome random textSome random textSome random textSome random textSome random textSomeeSome random textSome random textSome random textSome random textSome random textSome random textSome random textSomeeSome random textSome random textSome random textSome random textSome random textSome random textSome random textSomeeSome random textSome random textSome random textSome random textSome random textSome random textSome random textSomee123textSomee123textSomee123textSo";
+    // maximum 501 bytes at once to be encrypted
+    println!("data len: {}", data.as_bytes().len());
+
+    // path needs to be accessible by user with write permission for initial setup
+    let relative_path_to_working_directory_for_storing_encryption_parameters = "/test/encryption_parameters/";
+    // it will read encryption params like public, private keys and passphrase or create them
+    let (encryption_params, decryption_params) = setup(Some(relative_path_to_working_directory_for_storing_encryption_parameters)).unwrap();
+
+
+    let encrypted_vec_u8 = encrypt(encryption_params, data.as_bytes()).unwrap();
+    let decrypted_vec_u8 = decrypt(decryption_params, encrypted_vec_u8.as_ref()).unwrap();
+
+    let decrypted = String::from_utf8(decrypted_vec_u8).unwrap();
+
+    //decrypted data will contain trailing \0, removing them
+    assert_eq!(data.to_string(), decrypted.replace('\0', ""));
+}
