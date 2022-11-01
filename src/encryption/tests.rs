@@ -19,5 +19,6 @@ fn encryption() {
 
     let decrypted = String::from_utf8(decrypted_u8).unwrap();
 
+    //decrypted data will contain trailing \0, removing them
     assert_eq!(data.to_string(), decrypted.replace('\0', ""));
 }
