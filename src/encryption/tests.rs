@@ -3,18 +3,19 @@ use crate::encryption::{decrypt, encrypt, get_decryption_params, get_encryption_
 #[test]
 fn encryption() {
     // path needs to be accessible by user with write permission for initial setup
-    let relative_path_to_working_directory_for_storing_encryption_parameters = "/test/encryption_parameters/";
+    let params_path = "/test/encryption_parameters/";
     // it will read encryption params like public, private keys and passphrase or create them
-    let _ = setup(Some(relative_path_to_working_directory_for_storing_encryption_parameters));
+    // in this example setup is used to populate the params and used later via get_encryption_params or get_decryption_params
+    let _ = setup(Some(params_path));
 
-    let params  = get_encryption_params(Some(relative_path_to_working_directory_for_storing_encryption_parameters)).unwrap();
+    let params  = get_encryption_params(Some(params_path)).unwrap();
 
     //maximum 501 bytes at once to be encrypted
     let data = "Some random textSome random textSome random textSome random textSome random textSome random textSome random textSomeeSome random textSome random textSome random textSome random textSome random textSome random textSome random textSomeeSome random textSome random textSome random textSome random textSome random textSome random textSome random textSomeeSome random textSome random textSome random textSome random textSome random textSome random textSome random textSomee123textSomee123textSomee123textSo";
     println!("data len: {}", data.as_bytes().len());
     let encrypted_u8 = encrypt(params, data.as_bytes()).unwrap();
 
-    let params = get_decryption_params(Some(relative_path_to_working_directory_for_storing_encryption_parameters)).unwrap();
+    let params = get_decryption_params(Some(params_path)).unwrap();
     let decrypted_u8 = decrypt(params, encrypted_u8.as_ref()).unwrap();
 
     let decrypted = String::from_utf8(decrypted_u8).unwrap();
@@ -30,9 +31,9 @@ fn encryption_alternative() {
     println!("data len: {}", data.as_bytes().len());
 
     // path needs to be accessible by user with write permission for initial setup
-    let relative_path_to_working_directory_for_storing_encryption_parameters = "/test/encryption_parameters/";
+    let params_path = "/test/encryption_parameters/";
     // it will read encryption params like public, private keys and passphrase or create them
-    let (encryption_params, decryption_params) = setup(Some(relative_path_to_working_directory_for_storing_encryption_parameters)).unwrap();
+    let (encryption_params, decryption_params) = setup(Some(params_path)).unwrap();
 
 
     let encrypted_vec_u8 = encrypt(encryption_params, data.as_bytes()).unwrap();
