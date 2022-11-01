@@ -3,7 +3,7 @@ use sha256::digest;
 use openssl::rsa::Padding;
 use openssl::rsa::Rsa;
 use openssl::symm::Cipher;
-use crate::{get_path_relative_to_working_directory, get_static_filepath, read_or_create_and_write};
+use crate::{get_path_relative_to_working_directory, get_static_filepath, read_file, read_or_create_and_write};
 
 #[cfg(test)]
 mod tests;
@@ -71,13 +71,26 @@ fn setup(path_to_encryption_parameters: Option<&str>) -> Result<(EncryptionParam
 }
 
 pub fn setup_encryption(path_to_encryption_parameters: Option<&str>) -> Result<EncryptionParameters, String> {
-    let boxed_params = setup(path_to_encryption_parameters);
-    if boxed_params.is_err() {
-        return Err(boxed_params.err().unwrap());
+    let relative_path = get_path_relative_to_working_directory(path_to_encryption_parameters, ".rsa_public_key");
+    let boxed_public_key_path = get_static_filepath(relative_path.as_str());
+    if boxed_public_key_path.is_err() {
+        return Err(boxed_public_key_path.err().unwrap());
     }
+    let public_key_path = boxed_public_key_path.unwrap();
 
-    let (params, _) = boxed_params.unwrap();
-    Ok(params)
+
+    let boxed_public_key = read_file(public_key_path.as_str());
+    if boxed_public_key.is_err() {
+        let message = boxed_public_key.err().unwrap();
+        return Err(message)
+    }
+    let public_key = boxed_public_key.unwrap();
+
+    let encryption_params = EncryptionParameters {
+        rsa_public_key_pem: public_key,
+    };
+
+    Ok(encryption_params)
 }
 
 pub fn setup_decryption(path_to_encryption_parameters: Option<&str>) -> Result<DecryptionParameters, String> {
