@@ -166,6 +166,19 @@ pub fn decrypt(params: DecryptionParameters, data: &[u8]) -> Result<Vec<u8>, Str
     Ok(buffer)
 }
 
+pub fn generate_passphrase() -> Result<String, String> {
+    let now = SystemTime::now();
+    let boxed_time_in_nanos = now.duration_since(UNIX_EPOCH);
+    if boxed_time_in_nanos.is_err() {
+        let message = format!("unable to get system time: {}", boxed_time_in_nanos.err().unwrap());
+        return Err(message)
+    }
+    let time_in_nanos = boxed_time_in_nanos.unwrap().as_nanos();
+    let hex_time_in_millis = format!("{time_in_nanos:X}");
+    let sha_timestamp = digest(hex_time_in_millis);
+    Ok(sha_timestamp)
+}
+
 
 // below are functions not exposed as an api, used for inner implementation
 
@@ -187,19 +200,6 @@ fn get_or_create_passphrase(path: &str) -> Result<String, String> {
 
     let passphrase = boxed_passphrase.unwrap();
     Ok(passphrase)
-}
-
-fn generate_passphrase() -> Result<String, String> {
-    let now = SystemTime::now();
-    let boxed_time_in_nanos = now.duration_since(UNIX_EPOCH);
-    if boxed_time_in_nanos.is_err() {
-        let message = format!("unable to get system time: {}", boxed_time_in_nanos.err().unwrap());
-        return Err(message)
-    }
-    let time_in_nanos = boxed_time_in_nanos.unwrap().as_nanos();
-    let hex_time_in_millis = format!("{time_in_nanos:X}");
-    let sha_timestamp = digest(hex_time_in_millis);
-    Ok(sha_timestamp)
 }
 
 fn get_or_create_private_public_keys(passphrase: &str, public_key_path: &str, private_key_path: &str) -> Result<(String, String), String> {
