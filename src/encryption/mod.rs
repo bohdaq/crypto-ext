@@ -19,7 +19,7 @@ pub struct DecryptionParameters {
     pub rsa_private_key_pem: String,
 }
 
-fn setup(path_to_encryption_parameters: Option<&str>) -> Result<(EncryptionParameters, DecryptionParameters), String> {
+pub fn setup(path_to_encryption_parameters: Option<&str>) -> Result<(EncryptionParameters, DecryptionParameters), String> {
     let relative_path = get_path_relative_to_working_directory(path_to_encryption_parameters, ".rsa_passphrase");
     let boxed_passphrase_path = get_static_filepath(relative_path.as_str());
     if boxed_passphrase_path.is_err() {
@@ -70,7 +70,7 @@ fn setup(path_to_encryption_parameters: Option<&str>) -> Result<(EncryptionParam
     Ok((encryption_params, decryption_params))
 }
 
-pub fn setup_encryption(path_to_encryption_parameters: Option<&str>) -> Result<EncryptionParameters, String> {
+pub fn get_encryption_params(path_to_encryption_parameters: Option<&str>) -> Result<EncryptionParameters, String> {
     let relative_path = get_path_relative_to_working_directory(path_to_encryption_parameters, ".rsa_public_key");
     let boxed_public_key_path = get_static_filepath(relative_path.as_str());
     if boxed_public_key_path.is_err() {

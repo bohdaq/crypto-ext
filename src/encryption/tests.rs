@@ -1,11 +1,13 @@
-use crate::encryption::{decrypt, encrypt, setup_decryption, setup_encryption};
+use crate::encryption::{decrypt, encrypt, setup_decryption, get_encryption_params, setup};
 
 #[test]
 fn encryption() {
     // path needs to be accessible by user with write permission for initial setup
     let relative_path_to_working_directory_for_storing_encryption_parameters = "/test/encryption_parameters/";
     // it will read encryption params like public, private keys and passphrase or create them
-    let params  = setup_encryption(Some(relative_path_to_working_directory_for_storing_encryption_parameters)).unwrap();
+    let _ = setup(Some(relative_path_to_working_directory_for_storing_encryption_parameters));
+
+    let params  = get_encryption_params(Some(relative_path_to_working_directory_for_storing_encryption_parameters)).unwrap();
 
     //maximum 501 bytes at once to be encrypted
     let data = "Some random textSome random textSome random textSome random textSome random textSome random textSome random textSomeeSome random textSome random textSome random textSome random textSome random textSome random textSome random textSomeeSome random textSome random textSome random textSome random textSome random textSome random textSome random textSomeeSome random textSome random textSome random textSome random textSome random textSome random textSome random textSomee123textSomee123textSomee123textSo";
