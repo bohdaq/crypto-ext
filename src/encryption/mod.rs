@@ -19,7 +19,7 @@ pub struct DecryptionParameters {
     pub rsa_private_key_pem: String,
 }
 
-pub fn setup_encryption(path_to_encryption_parameters: Option<&str>) -> Result<(EncryptionParameters, DecryptionParameters), String> {
+fn setup(path_to_encryption_parameters: Option<&str>) -> Result<(EncryptionParameters, DecryptionParameters), String> {
     let relative_path = get_path_relative_to_working_directory(path_to_encryption_parameters, ".rsa_passphrase");
     let boxed_passphrase_path = get_static_filepath(relative_path.as_str());
     if boxed_passphrase_path.is_err() {
@@ -69,6 +69,27 @@ pub fn setup_encryption(path_to_encryption_parameters: Option<&str>) -> Result<(
 
     Ok((encryption_params, decryption_params))
 }
+
+pub fn setup_encryption(path_to_encryption_parameters: Option<&str>) -> Result<EncryptionParameters, String> {
+    let boxed_params = setup(path_to_encryption_parameters);
+    if boxed_params.is_err() {
+        return Err(boxed_params.err().unwrap());
+    }
+
+    let (params, _) = boxed_params.unwrap();
+    Ok(params)
+}
+
+pub fn setup_decryption(path_to_encryption_parameters: Option<&str>) -> Result<DecryptionParameters, String> {
+    let boxed_params = setup(path_to_encryption_parameters);
+    if boxed_params.is_err() {
+        return Err(boxed_params.err().unwrap());
+    }
+
+    let (_, params) = boxed_params.unwrap();
+    Ok(params)
+}
+
 
 pub fn encrypt(params: EncryptionParameters, data: &[u8]) -> Result<Vec<u8>, String> {
     let boxed_rsa = Rsa::public_key_from_pem(params.rsa_public_key_pem.as_bytes());
