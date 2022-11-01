@@ -3,7 +3,7 @@ use openssl::dsa::Dsa;
 use openssl::hash::MessageDigest;
 use openssl::pkey::{PKey, Private};
 use openssl::sign::{Signer, Verifier};
-use crate::{get_path_relative_to_working_directory, get_static_filepath, read_or_create_and_write};
+use crate::{get_path_relative_to_working_directory, get_static_filepath, read_file, read_or_create_and_write};
 
 #[cfg(test)]
 mod tests;
@@ -25,12 +25,11 @@ pub struct VerificationParameters {
     pub dsa_public_key : String,
 }
 
-pub fn setup_signature(path_to_encryption_parameters: Option<&str>) -> Result<SignatureParameters, String> {
+pub fn setup(path_to_encryption_parameters: Option<&str>) -> Result<(SignatureParameters, VerificationParameters), String> {
     let dsa_ref = Dsa::generate(DSA_SIZE).unwrap();
 
     let (dsa_p,dsa_q,dsa_g, dsa_public_key) = setup_public_components(&dsa_ref, path_to_encryption_parameters).unwrap();
     let dsa_private_key = setup_private_key(&dsa_ref, path_to_encryption_parameters).unwrap();
-
     let signature_parameters = SignatureParameters {
         dsa_p,
         dsa_q,
@@ -38,21 +37,42 @@ pub fn setup_signature(path_to_encryption_parameters: Option<&str>) -> Result<Si
         dsa_private_key,
         dsa_public_key,
     };
-    Ok(signature_parameters)
-}
-
-pub fn setup_verification(path_to_encryption_parameters: Option<&str>) -> Result<VerificationParameters, String> {
-    let dsa_ref = Dsa::generate(DSA_SIZE).unwrap();
 
     let (dsa_p,dsa_q,dsa_g, dsa_public_key) = setup_public_components(&dsa_ref, path_to_encryption_parameters).unwrap();
-
     let verification_parameters = VerificationParameters {
         dsa_p,
         dsa_q,
         dsa_g,
         dsa_public_key,
     };
-    Ok(verification_parameters)
+
+    Ok((signature_parameters, verification_parameters))
+}
+
+pub fn get_signature_params(path_to_encryption_parameters: Option<&str>) -> Result<SignatureParameters, String> {
+    let dsa_private_key = get_private_key(path_to_encryption_parameters).unwrap();
+    let (dsa_p, dsa_q, dsa_g, dsa_public_key ) = get_public_components(path_to_encryption_parameters).unwrap();
+    let params = SignatureParameters {
+        dsa_p,
+        dsa_q,
+        dsa_g,
+        dsa_private_key,
+        dsa_public_key,
+    };
+
+    Ok(params)
+}
+
+pub fn get_verification_params(path_to_encryption_parameters: Option<&str>) -> Result<VerificationParameters, String> {
+    let (dsa_p, dsa_q, dsa_g, dsa_public_key ) = get_public_components(path_to_encryption_parameters).unwrap();
+    let params = VerificationParameters {
+        dsa_p,
+        dsa_q,
+        dsa_g,
+        dsa_public_key,
+    };
+
+    Ok(params)
 }
 
 pub fn setup_private_key(dsa_ref: &Dsa<Private>, path_to_encryption_parameters: Option<&str>) -> Result<String, String> {
@@ -66,6 +86,22 @@ pub fn setup_private_key(dsa_ref: &Dsa<Private>, path_to_encryption_parameters: 
 
     let dsa_private_key_path = boxed_private_key_path.unwrap();
     let boxed_private_key = get_or_create_value_at_path(dsa_private_key_path.as_str(), private_key.to_string().as_str());
+    if boxed_private_key.is_err() {
+        return Err(boxed_private_key.err().unwrap());
+    }
+    let private_key = boxed_private_key.unwrap();
+    Ok(private_key)
+}
+
+pub fn get_private_key(path_to_encryption_parameters: Option<&str>) -> Result<String, String> {
+    let relative_path = get_path_relative_to_working_directory(path_to_encryption_parameters, ".dsa_private_key");
+    let boxed_private_key_path = get_static_filepath(relative_path.as_str());
+    if boxed_private_key_path.is_err() {
+        return Err(boxed_private_key_path.err().unwrap());
+    }
+
+    let dsa_private_key_path = boxed_private_key_path.unwrap();
+    let boxed_private_key = read_file(dsa_private_key_path.as_str());
     if boxed_private_key.is_err() {
         return Err(boxed_private_key.err().unwrap());
     }
@@ -125,6 +161,64 @@ pub fn setup_public_components(dsa_ref: &Dsa<Private>, path_to_encryption_parame
 
     let dsa_public_key_path = boxed_public_key_path.unwrap();
     let boxed_public_key = get_or_create_value_at_path(dsa_public_key_path.as_str(), public_key.to_string().as_str());
+    if boxed_public_key.is_err() {
+        return Err(boxed_public_key.err().unwrap());
+    }
+
+    let p = boxed_p.unwrap();
+    let q = boxed_q.unwrap();
+    let g = boxed_g.unwrap();
+    let public_key = boxed_public_key.unwrap();
+
+    Ok((p, q, g, public_key))
+}
+
+pub fn get_public_components(path_to_encryption_parameters: Option<&str>) -> Result<(String, String, String, String), String> {
+    let relative_path = get_path_relative_to_working_directory(path_to_encryption_parameters, ".dsa_p");
+    let boxed_dsa_p_path = get_static_filepath(relative_path.as_str());
+    if boxed_dsa_p_path.is_err() {
+        return Err(boxed_dsa_p_path.err().unwrap());
+    }
+
+    let dsa_p_path = boxed_dsa_p_path.unwrap();
+    let boxed_p = read_file(dsa_p_path.as_str());
+    if boxed_p.is_err() {
+        return Err(boxed_p.err().unwrap());
+    }
+
+
+    let relative_path = get_path_relative_to_working_directory(path_to_encryption_parameters, ".dsa_q");
+    let boxed_dsa_q_path = get_static_filepath(relative_path.as_str());
+    if boxed_dsa_q_path.is_err() {
+        return Err(boxed_dsa_q_path.err().unwrap());
+    }
+
+    let dsa_q_path = boxed_dsa_q_path.unwrap();
+    let boxed_q = read_file(dsa_q_path.as_str());
+    if boxed_q.is_err() {
+        return Err(boxed_q.err().unwrap());
+    }
+
+    let relative_path = get_path_relative_to_working_directory(path_to_encryption_parameters, ".dsa_g");
+    let boxed_dsa_g_path = get_static_filepath(relative_path.as_str());
+    if boxed_dsa_g_path.is_err() {
+        return Err(boxed_dsa_g_path.err().unwrap());
+    }
+
+    let dsa_q_path = boxed_dsa_g_path.unwrap();
+    let boxed_g = read_file(dsa_q_path.as_str());
+    if boxed_g.is_err() {
+        return Err(boxed_g.err().unwrap());
+    }
+
+    let relative_path = get_path_relative_to_working_directory(path_to_encryption_parameters, ".dsa_public_key");
+    let boxed_public_key_path = get_static_filepath(relative_path.as_str());
+    if boxed_public_key_path.is_err() {
+        return Err(boxed_public_key_path.err().unwrap());
+    }
+
+    let dsa_public_key_path = boxed_public_key_path.unwrap();
+    let boxed_public_key = read_file(dsa_public_key_path.as_str());
     if boxed_public_key.is_err() {
         return Err(boxed_public_key.err().unwrap());
     }
