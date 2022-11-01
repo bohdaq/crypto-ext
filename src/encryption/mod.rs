@@ -166,6 +166,9 @@ pub fn decrypt(params: DecryptionParameters, data: &[u8]) -> Result<Vec<u8>, Str
     Ok(buffer)
 }
 
+
+// below are functions not exposed as an api, used for inner implementation
+
 fn get_or_create_passphrase(path: &str) -> Result<String, String> {
 
     let boxed_passphrase = generate_passphrase();

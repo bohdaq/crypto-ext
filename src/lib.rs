@@ -7,6 +7,8 @@ pub mod encryption;
 pub mod signing;
 
 
+// below are functions not exposed as an api, used for inner implementation
+
 fn get_static_filepath(path: &str) -> Result<String, String> {
     let boxed_dir = env::current_dir();
     if boxed_dir.is_err() {
