@@ -1,4 +1,4 @@
-use crate::signing::{get_signature_params, get_verification_params, setup, sign, verify};
+use crate::asymmetric::signing::{get_signature_params, get_verification_params, setup, sign, verify};
 
 
 #[test]

@@ -3,8 +3,7 @@ use std::fs::{File, OpenOptions};
 use std::io::{Read, Write};
 use std::path::Path;
 
-pub mod encryption;
-pub mod signing;
+pub mod asymmetric;
 
 
 // below are functions not exposed as an api, used for inner implementation

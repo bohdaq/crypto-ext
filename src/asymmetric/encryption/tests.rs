@@ -1,4 +1,4 @@
-use crate::encryption::{decrypt, encrypt, get_decryption_params, get_encryption_params, setup};
+use crate::asymmetric::encryption::{decrypt, encrypt, get_decryption_params, get_encryption_params, setup};
 
 #[test]
 fn encryption() {
