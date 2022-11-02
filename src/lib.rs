@@ -4,6 +4,7 @@ use std::io::{Read, Write};
 use std::path::Path;
 
 pub mod asymmetric;
+pub mod symmetric;
 
 
 // below are functions not exposed as an api, used for inner implementation
