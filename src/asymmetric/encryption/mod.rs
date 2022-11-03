@@ -1,9 +1,7 @@
-use std::time::{SystemTime, UNIX_EPOCH};
-use sha256::digest;
 use openssl::rsa::Padding;
 use openssl::rsa::Rsa;
 use openssl::symm::Cipher;
-use crate::{get_path_relative_to_working_directory, get_static_filepath, read_file, read_or_create_and_write};
+use crate::{generate_passphrase, get_path_relative_to_working_directory, get_static_filepath, read_file, read_or_create_and_write};
 
 #[cfg(test)]
 mod tests;
@@ -164,19 +162,6 @@ pub fn decrypt(params: DecryptionParameters, data: &[u8]) -> Result<Vec<u8>, Str
     }
     let _ = boxed_decrypt.unwrap();
     Ok(buffer)
-}
-
-pub fn generate_passphrase() -> Result<String, String> {
-    let now = SystemTime::now();
-    let boxed_time_in_nanos = now.duration_since(UNIX_EPOCH);
-    if boxed_time_in_nanos.is_err() {
-        let message = format!("unable to get system time: {}", boxed_time_in_nanos.err().unwrap());
-        return Err(message)
-    }
-    let time_in_nanos = boxed_time_in_nanos.unwrap().as_nanos();
-    let hex_time_in_millis = format!("{time_in_nanos:X}");
-    let sha_timestamp = digest(hex_time_in_millis);
-    Ok(sha_timestamp)
 }
 
 
