@@ -1,6 +1,6 @@
 use crate::generate_passphrase;
-use aes_gcm::aead::{generic_array::GenericArray, Aead, KeyInit, Payload};
-use aes_gcm::Aes128Gcm;
+use aes_gcm_siv::aead::{generic_array::GenericArray, Aead, KeyInit, Payload};
+use aes_gcm_siv::Aes128GcmSiv;
 
 #[test]
 fn encryption() {
@@ -20,7 +20,7 @@ fn encryption() {
     let key = GenericArray::from_slice(key[48..64].as_bytes());
     let nonce = GenericArray::from_slice(nonce[36..48].as_bytes());
 
-    let cipher = Aes128Gcm::new(key);
+    let cipher = Aes128GcmSiv::new(key);
 
     let cipher_text = cipher.encrypt(nonce, payload).unwrap();
     let (_ct, _tag) = cipher_text.split_at(cipher_text.len() - 16);
