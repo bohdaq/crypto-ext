@@ -1,3 +1,4 @@
+use sha256::digest;
 use crate::generate_passphrase;
 use aes_gcm::aead::{generic_array::GenericArray, Aead, KeyInit, Payload};
 use aes_gcm::Aes128Gcm;
@@ -8,7 +9,7 @@ fn encryption() {
 
     let key = generate_passphrase().unwrap();
 
-    let nonce = generate_passphrase().unwrap();
+    let nonce = digest(data.to_string());
 
     let aad = "";
 
