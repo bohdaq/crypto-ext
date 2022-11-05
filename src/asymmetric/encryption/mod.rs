@@ -161,7 +161,14 @@ pub fn decrypt(params: DecryptionParameters, data: &[u8]) -> Result<Vec<u8>, Str
         return Err(message)
     }
     let _ = boxed_decrypt.unwrap();
-    Ok(buffer)
+
+    let as_string = String::from_utf8(buffer).expect("Found invalid UTF-8");
+
+    let as_filtered_string = as_string.trim_end_matches(char::from(0));
+
+    let as_vector = as_filtered_string.as_bytes().to_vec();
+
+    Ok(as_vector)
 }
 
 
