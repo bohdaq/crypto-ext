@@ -3,8 +3,8 @@ use crate::symmetric::encryption::{decrypt, DecryptionParameters, encrypt, Encry
 
 #[test]
 fn encryption() {
-    let data = "some data to encrypt";
-    let associated_data = "some unencrypted data that needs to be sent along the encrypted data and won't be changed during transmission by a hacker";
+    let data = "some data to encrypt".as_bytes();
+    let associated_data = "some unencrypted data that needs to be sent along the encrypted data and won't be changed during transmission by a hacker".as_bytes();
 
     let passphrase_64_bytes = generate_passphrase().unwrap();
 
@@ -15,7 +15,7 @@ fn encryption() {
     let nonce = passphrase_64_bytes[36..48].to_string();
 
     let params = EncryptionParameters { key, nonce };
-    let encrypted_data = encrypt(params, data.as_bytes(), associated_data.as_bytes()).unwrap();
+    let encrypted_data = encrypt(params, data, associated_data).unwrap();
 
 
     // decryption
@@ -23,8 +23,8 @@ fn encryption() {
     let nonce = passphrase_64_bytes[36..48].to_string();
 
     let params = DecryptionParameters{ key, nonce };
-    let plain_text_as_bytes = decrypt(params, encrypted_data.as_slice(), associated_data.as_bytes()).unwrap();
+    let decrypted = decrypt(params, encrypted_data.as_slice(), associated_data).unwrap();
 
-    assert_eq!(data.as_bytes(), plain_text_as_bytes);
+    assert_eq!(data, decrypted);
 
 }
