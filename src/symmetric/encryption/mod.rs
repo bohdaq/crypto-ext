@@ -34,3 +34,24 @@ pub fn encrypt(params: EncryptionParameters, data_to_encrypt: &[u8], associated_
 
     Ok(cipher_text)
 }
+
+pub fn decrypt(params: DecryptionParameters, encrypted_data: &[u8], associated_data: &[u8]) -> Result<Vec<u8>, String> {
+    let payload = Payload {
+        msg: encrypted_data,
+        aad: associated_data,
+    };
+
+    let key = GenericArray::from_slice(params.key.as_bytes());
+    let nonce = GenericArray::from_slice(params.nonce.as_bytes());
+
+    let cipher = Aes128Gcm::new(key);
+    let boxed_decrypted_data = cipher.decrypt(nonce, payload);
+    if boxed_decrypted_data.is_err() {
+        let message = boxed_decrypted_data.err().unwrap().to_string();
+        return Err(message)
+    }
+
+    let decrypted_data = boxed_decrypted_data.unwrap();
+
+    Ok(decrypted_data)
+}

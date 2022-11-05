@@ -1,7 +1,5 @@
 use crate::generate_passphrase;
-use aes_gcm::aead::{generic_array::GenericArray, Aead, KeyInit, Payload};
-use aes_gcm::Aes128Gcm;
-use crate::symmetric::encryption::{encrypt, EncryptionParameters};
+use crate::symmetric::encryption::{decrypt, DecryptionParameters, encrypt, EncryptionParameters};
 
 #[test]
 fn encryption() {
@@ -24,18 +22,11 @@ fn encryption() {
 
     // decryption
 
-    let payload = Payload {
-        msg: &cipher_text,
-        aad: associated_data.as_bytes(),
-    };
-
     let key = passphrase_64_bytes[48..64].to_string();
     let nonce = passphrase_64_bytes[36..48].to_string();
 
-    let key = GenericArray::from_slice(key.as_bytes());
-    let nonce = GenericArray::from_slice(nonce.as_bytes());
-    let cipher = Aes128Gcm::new(key);
-    let plain_text = cipher.decrypt(nonce, payload).unwrap();
+    let params = DecryptionParameters{ key, nonce };
+    let plain_text = decrypt(params, cipher_text.as_slice(), associated_data.as_ref()).unwrap();
 
     assert_eq!(data.as_bytes(), plain_text);
 
