@@ -23,8 +23,8 @@ fn encryption() {
     let nonce = passphrase_64_bytes[36..48].to_string();
 
     let params = DecryptionParameters{ key, nonce };
-    let plain_text = decrypt(params, encrypted_data.as_slice(), associated_data.as_bytes()).unwrap();
+    let plain_text_as_bytes = decrypt(params, encrypted_data.as_slice(), associated_data.as_bytes()).unwrap();
 
-    assert_eq!(data.as_bytes(), plain_text);
+    assert_eq!(data.as_bytes(), plain_text_as_bytes);
 
 }
