@@ -1,7 +1,9 @@
+use aes_gcm::aead::rand_core::OsRng;
 use crate::asymmetric::signing::{get_signature_params, get_verification_params, setup, sign, verify};
 use p256:: {
-    ecdsa::{SigningKey, Signature, signature::Signer},
+    ecdsa::{SigningKey, Signature, signature::Signer, VerifyingKey, signature::Verifier},
 };
+
 
 
 #[test]
@@ -34,4 +36,16 @@ fn signing_alternative() {
     let is_verified = verify(verification_params, data, signature).unwrap();
 
     assert!(is_verified);
+}
+
+#[test]
+fn ecdsa() {
+    let signing_key = SigningKey::random(&mut OsRng);
+    let data = "data to sign".as_bytes();
+    let signature = signing_key.sign(data);
+
+    let verifying_key = VerifyingKey::from(&signing_key);
+    let boxed_verify = verifying_key.verify(data, &signature);
+
+    assert!(boxed_verify.is_ok());
 }
