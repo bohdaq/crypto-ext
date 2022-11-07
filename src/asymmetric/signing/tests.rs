@@ -37,15 +37,3 @@ fn signing_alternative() {
 
     assert!(verified.is_ok());
 }
-
-#[test]
-fn ecdsa() {
-    let signing_key = SigningKey::random(&mut OsRng);
-    let data = "data to sign".as_bytes();
-    let signature = signing_key.sign(data);
-
-    let verifying_key = VerifyingKey::from(&signing_key);
-    let boxed_verify = verifying_key.verify(data, &signature);
-
-    assert!(boxed_verify.is_ok());
-}
