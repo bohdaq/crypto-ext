@@ -1,7 +1,5 @@
 use crate::{get_path_relative_to_working_directory, get_static_filepath, read_file, read_or_create_and_write};
-use p256:: {
-    ecdsa::{SigningKey, Signature, signature::Signer, VerifyingKey, signature::Verifier},
-};
+use p256::{ecdsa::{SigningKey, Signature, signature::Signer, VerifyingKey, signature::Verifier}, EncodedPoint, NistP256};
 use aes_gcm::aead::rand_core::OsRng;
 
 #[cfg(test)]
@@ -56,14 +54,24 @@ pub fn get_verification_params(path_to_encryption_parameters: Option<&str>) -> R
 }
 
 pub fn sign(params: SignatureParameters, data: &[u8]) -> Result<Vec<u8>, String> {
-    //TODO:
-    let signature = vec![];
-    Ok(signature)
+    let signing_key = SigningKey::from_bytes(params.ecdsa_private_key.as_slice()).unwrap();
+    let signature = signing_key.sign(data);
+    Ok(signature.to_der().as_bytes().to_vec())
 }
 
 pub fn verify(params: VerificationParameters, data: &[u8], signature: &[u8]) -> Result<(), String> {
-    //TODO
-    Ok(())
+    let point = EncodedPoint::from_bytes(params.ecdsa_public_key.as_slice()).unwrap();
+    let verifying_key = VerifyingKey::from_encoded_point(&point).unwrap();
+
+    let signature = Signature::from_der(signature).unwrap();
+    let verified = verifying_key.verify(data, &signature);
+
+    return if verified.is_ok() {
+        Ok(())
+    } else {
+        let message = verified.err().unwrap().to_string();
+        Err(message)
+    }
 }
 
 // below are functions not exposed as an api, used for inner implementation
