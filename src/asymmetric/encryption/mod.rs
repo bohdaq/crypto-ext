@@ -82,7 +82,8 @@ pub fn get_encryption_params(path_to_encryption_parameters: Option<&str>) -> Res
         let message = boxed_public_key.err().unwrap();
         return Err(message)
     }
-    let public_key = String::from_utf8(boxed_public_key.unwrap()).unwrap();
+    let boxed_public_key = String::from_utf8(boxed_public_key.unwrap());
+    let public_key = boxed_public_key.unwrap();
 
     let encryption_params = EncryptionParameters {
         rsa_public_key_pem: public_key,
@@ -119,7 +120,8 @@ pub fn get_decryption_params(path_to_encryption_parameters: Option<&str>) -> Res
         let message = boxed_private_key.err().unwrap();
         return Err(message)
     }
-    let private_key = String::from_utf8(boxed_private_key.unwrap()).unwrap();
+    let boxed_private_key = String::from_utf8(boxed_private_key.unwrap());
+    let private_key = boxed_private_key.unwrap();
 
     let decryption_params = DecryptionParameters {
         rsa_passphrase: passphrase,
@@ -190,7 +192,8 @@ fn get_or_create_passphrase(path: &str) -> Result<String, String> {
         return Err(message)
     }
 
-    let passphrase = String::from_utf8(boxed_passphrase.unwrap()).unwrap();
+    let boxed_passphrase = String::from_utf8(boxed_passphrase.unwrap());
+    let passphrase = boxed_passphrase.unwrap();
     Ok(passphrase)
 }
 
@@ -198,25 +201,29 @@ fn get_or_create_private_public_keys(passphrase: &str, public_key_path: &str, pr
     let rsa = Rsa::generate(RSA_SIZE).unwrap();
 
     let boxed_private_key = rsa.private_key_to_pem_passphrase(Cipher::aes_128_cbc(), passphrase.as_bytes());
-    let private_key  = String::from_utf8(boxed_private_key.unwrap()).unwrap();
+    let boxed_private_key = String::from_utf8(boxed_private_key.unwrap());
+    let private_key  = boxed_private_key.unwrap();
 
     let boxed_private_key = read_or_create_and_write(private_key_path, private_key.as_bytes());
     if boxed_private_key.is_err() {
         let message = boxed_private_key.err().unwrap();
         return Err(message)
     }
-    let private_key = String::from_utf8(boxed_private_key.unwrap()).unwrap();
+    let boxed_private_key = String::from_utf8(boxed_private_key.unwrap());
+    let private_key = boxed_private_key.unwrap();
 
 
     let boxed_public_key = rsa.public_key_to_pem();
-    let public_key = String::from_utf8(boxed_public_key.unwrap()).unwrap();
+    let boxed_public_key = String::from_utf8(boxed_public_key.unwrap());
+    let public_key = boxed_public_key.unwrap();
 
     let boxed_public_key = read_or_create_and_write(public_key_path, public_key.as_bytes());
     if boxed_public_key.is_err() {
         let message = boxed_public_key.err().unwrap();
         return Err(message)
     }
-    let public_key = String::from_utf8(boxed_public_key.unwrap()).unwrap();
+    let boxed_public_key = String::from_utf8(boxed_public_key.unwrap());
+    let public_key = boxed_public_key.unwrap();
 
     Ok((private_key.to_string(), public_key.to_string()))
 }

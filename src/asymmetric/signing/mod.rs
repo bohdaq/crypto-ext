@@ -77,7 +77,7 @@ pub fn verify(params: VerificationParameters, data: &[u8], signature: &[u8]) -> 
 // below are functions not exposed as an api, used for inner implementation
 
 fn setup_private_key(private_key: &[u8], path_to_encryption_parameters: Option<&str>) -> Result<Vec<u8>, String> {
-    let relative_path = get_path_relative_to_working_directory(path_to_encryption_parameters, ".ecdsa_private_key");
+    let relative_path = get_path_relative_to_working_directory(path_to_encryption_parameters, ".ecdsa_private_key.der");
     let boxed_private_key_path = get_static_filepath(relative_path.as_str());
     if boxed_private_key_path.is_err() {
         return Err(boxed_private_key_path.err().unwrap());
@@ -93,7 +93,7 @@ fn setup_private_key(private_key: &[u8], path_to_encryption_parameters: Option<&
 }
 
 fn get_private_key(path_to_encryption_parameters: Option<&str>) -> Result<Vec<u8>, String> {
-    let relative_path = get_path_relative_to_working_directory(path_to_encryption_parameters, ".ecdsa_private_key");
+    let relative_path = get_path_relative_to_working_directory(path_to_encryption_parameters, ".ecdsa_private_key.der");
     let boxed_private_key_path = get_static_filepath(relative_path.as_str());
     if boxed_private_key_path.is_err() {
         return Err(boxed_private_key_path.err().unwrap());
@@ -109,7 +109,7 @@ fn get_private_key(path_to_encryption_parameters: Option<&str>) -> Result<Vec<u8
 }
 
 fn setup_public_key(public_key: &[u8], path_to_encryption_parameters: Option<&str>) -> Result<Vec<u8>, String> {
-    let relative_path = get_path_relative_to_working_directory(path_to_encryption_parameters, ".ecdsa_public_key");
+    let relative_path = get_path_relative_to_working_directory(path_to_encryption_parameters, ".ecdsa_public_key.der");
     let boxed_public_key_path = get_static_filepath(relative_path.as_str());
     if boxed_public_key_path.is_err() {
         return Err(boxed_public_key_path.err().unwrap());
@@ -127,7 +127,7 @@ fn setup_public_key(public_key: &[u8], path_to_encryption_parameters: Option<&st
 }
 
 fn get_public_key(path_to_encryption_parameters: Option<&str>) -> Result<Vec<u8>, String> {
-    let relative_path = get_path_relative_to_working_directory(path_to_encryption_parameters, ".ecdsa_public_key");
+    let relative_path = get_path_relative_to_working_directory(path_to_encryption_parameters, ".ecdsa_public_key.der");
     let boxed_public_key_path = get_static_filepath(relative_path.as_str());
     if boxed_public_key_path.is_err() {
         return Err(boxed_public_key_path.err().unwrap());
