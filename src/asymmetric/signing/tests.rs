@@ -19,9 +19,9 @@ fn signing() {
     let signature = sign(signature_params, data).unwrap();
 
     let verification_params = get_verification_params(Some(path_to_params)).unwrap();
-    let is_verified = verify(verification_params, data, signature).unwrap();
+    let verified = verify(verification_params, data, signature.as_slice());
 
-    assert!(is_verified);
+    assert!(verified.is_ok());
 }
 
 #[test]
@@ -33,9 +33,9 @@ fn signing_alternative() {
 
     let signature = sign(signature_params, data).unwrap();
 
-    let is_verified = verify(verification_params, data, signature).unwrap();
+    let verified = verify(verification_params, data, signature.as_slice());
 
-    assert!(is_verified);
+    assert!(verified.is_ok());
 }
 
 #[test]

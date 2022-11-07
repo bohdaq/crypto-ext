@@ -56,7 +56,7 @@ fn get_path_relative_to_working_directory(boxed_path_to_encryption_parameters: O
 }
 
 
-fn read_or_create_and_write(path: &str, content: &str) -> Result<String, String> {
+fn read_or_create_and_write(path: &str, content: &[u8]) -> Result<Vec<u8>, String> {
     let does_passphrase_exist = does_file_exist(path);
     return if does_passphrase_exist {
         let boxed_read = read_file(path);
@@ -72,12 +72,12 @@ fn read_or_create_and_write(path: &str, content: &str) -> Result<String, String>
             return Err(message)
         }
 
-        let boxed_write = write_file(path, content.as_bytes());
+        let boxed_write = write_file(path, content);
         if boxed_write.is_err() {
             let message = boxed_write.err().unwrap();
             return Err(message)
         }
-        Ok(content.to_string())
+        Ok(Vec::from(content))
     }
 }
 
@@ -98,8 +98,8 @@ fn does_file_exist(path: &str) -> bool {
     file_exists
 }
 
-fn read_file(path: &str) -> Result<String, String> {
-    let mut file_contents : String = "".to_string();
+fn read_file(path: &str) -> Result<Vec<u8>, String> {
+    let mut file_contents : Vec<u8> = vec![];
     let boxed_open = OpenOptions::new()
         .read(true)
         .write(false)
@@ -113,7 +113,7 @@ fn read_file(path: &str) -> Result<String, String> {
 
     let mut file = boxed_open.unwrap();
 
-    let boxed_read = file.read_to_string(&mut file_contents);
+    let boxed_read = file.read_to_end(&mut file_contents);
     if boxed_read.is_err() {
         let message = format!("unable to read from file: {}", boxed_read.err().unwrap());
         return Err(message)
