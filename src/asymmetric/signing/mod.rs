@@ -1,5 +1,5 @@
 use crate::{get_path_relative_to_working_directory, get_static_filepath, read_file, read_or_create_and_write};
-use p256::{ecdsa::{SigningKey, Signature, signature::Signer, VerifyingKey, signature::Verifier}, EncodedPoint, NistP256};
+use p256::{ecdsa::{SigningKey, Signature, signature::Signer, VerifyingKey, signature::Verifier}, EncodedPoint};
 use aes_gcm::aead::rand_core::OsRng;
 
 #[cfg(test)]

@@ -1,7 +1,7 @@
 use aes_gcm::aead::rand_core::OsRng;
 use crate::asymmetric::signing::{get_signature_params, get_verification_params, setup, sign, verify};
 use p256:: {
-    ecdsa::{SigningKey, Signature, signature::Signer, VerifyingKey, signature::Verifier},
+    ecdsa::{SigningKey, signature::Signer, VerifyingKey, signature::Verifier},
 };
 
 
