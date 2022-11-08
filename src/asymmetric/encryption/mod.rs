@@ -175,6 +175,30 @@ pub fn encrypt(params: EncryptionParameters, data: &[u8]) -> Result<Vec<u8>, Str
     Ok(buffer)
 }
 
+
+/// Decrypts given byte array
+///
+/// # Examples
+///
+/// ```
+///    use crypto_ext::asymmetric::encryption::{encrypt, decrypt, EncryptionParameters, DecryptionParameters, setup, get_encryption_params, get_decryption_params};
+///
+///    #[test]
+///    fn decryption() {
+///        // maximum 501 bytes at once to be encrypted
+///        let data_to_encrypt_as_bytes = "Some data to encrypt".as_bytes();
+///
+///        // path needs to be accessible by user with write permission for initial setup
+///        let params_path = "/test/encryption_parameters/";
+///        // this will create encryption params like public, private keys and passphrase
+///        let (encryption_params, decryption_params) = setup(Some(params_path)).unwrap();
+///
+///        let encrypted_bytes = encrypt(encryption_params, data_to_encrypt_as_bytes).unwrap();
+///        let decrypted_bytes = decrypt(decryption_params, encrypted_bytes.as_slice()).unwrap();
+///
+///        assert_eq!(data_to_encrypt_as_bytes, decrypted_bytes);
+///    }
+/// ```
 pub fn decrypt(params: DecryptionParameters, data: &[u8]) -> Result<Vec<u8>, String> {
     let boxed_rsa = Rsa::private_key_from_pem_passphrase(params.rsa_private_key_pem.as_bytes(), params.rsa_passphrase.as_bytes());
     if boxed_rsa.is_err() {
