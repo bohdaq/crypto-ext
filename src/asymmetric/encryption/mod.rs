@@ -8,15 +8,21 @@ mod tests;
 
 const RSA_SIZE: u32 = 4096;
 
+/// EncryptionParameters is basically a public key
+///
 pub struct EncryptionParameters {
     pub rsa_public_key_pem: String,
 }
 
+/// DecryptionParameters is basically a private key and passphrase
+///
 pub struct DecryptionParameters {
     pub rsa_passphrase: String,
     pub rsa_private_key_pem: String,
 }
 
+/// Will read or create EncryptionParameters and DecryptionParameters at the given location which is relative to the working directory
+///
 pub fn setup(path_to_encryption_parameters: Option<&str>) -> Result<(EncryptionParameters, DecryptionParameters), String> {
     let relative_path = get_path_relative_to_working_directory(path_to_encryption_parameters, ".rsa_passphrase");
     let boxed_passphrase_path = get_static_filepath(relative_path.as_str());
@@ -68,6 +74,8 @@ pub fn setup(path_to_encryption_parameters: Option<&str>) -> Result<(EncryptionP
     Ok((encryption_params, decryption_params))
 }
 
+/// Returns EncryptionParameters stored at the given location which is relative to the working directory
+///
 pub fn get_encryption_params(path_to_encryption_parameters: Option<&str>) -> Result<EncryptionParameters, String> {
     let relative_path = get_path_relative_to_working_directory(path_to_encryption_parameters, ".rsa_public_key");
     let boxed_public_key_path = get_static_filepath(relative_path.as_str());
@@ -92,6 +100,8 @@ pub fn get_encryption_params(path_to_encryption_parameters: Option<&str>) -> Res
     Ok(encryption_params)
 }
 
+/// Returns DecryptionParameters stored at the given location which is relative to the working directory
+///
 pub fn get_decryption_params(path_to_encryption_parameters: Option<&str>) -> Result<DecryptionParameters, String> {
     let relative_path = get_path_relative_to_working_directory(path_to_encryption_parameters, ".rsa_passphrase");
     let boxed_passphrase_path = get_static_filepath(relative_path.as_str());
