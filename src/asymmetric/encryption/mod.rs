@@ -8,13 +8,13 @@ mod tests;
 
 const RSA_SIZE: u32 = 4096;
 
-/// EncryptionParameters is basically a public key
+/// EncryptionParameters is basically the RSA .pem encoded public key
 ///
 pub struct EncryptionParameters {
     pub rsa_public_key_pem: String,
 }
 
-/// DecryptionParameters is basically a private key and passphrase
+/// DecryptionParameters is basically the RSA .pem encoded private key and passphrase
 ///
 pub struct DecryptionParameters {
     pub rsa_passphrase: String,
