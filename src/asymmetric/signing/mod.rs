@@ -5,11 +5,12 @@ use aes_gcm::aead::rand_core::OsRng;
 #[cfg(test)]
 mod tests;
 
-
+/// SignatureParameters is basically the .der encoded ECDSA private key
 pub struct SignatureParameters {
     pub ecdsa_private_key: Vec<u8>,
 }
 
+/// VerificationParameters is basically the .der encoded ECDSA public key
 pub struct VerificationParameters {
     pub ecdsa_public_key: Vec<u8>,
 }
