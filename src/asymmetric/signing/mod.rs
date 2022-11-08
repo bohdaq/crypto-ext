@@ -15,6 +15,7 @@ pub struct VerificationParameters {
     pub ecdsa_public_key: Vec<u8>,
 }
 
+/// Will read or create SignatureParameters and VerificationParameters at the given location which is relative to the working directory
 pub fn setup(path_to_encryption_parameters: Option<&str>) -> Result<(SignatureParameters, VerificationParameters), String> {
     let signing_key = SigningKey::random(&mut OsRng);
     let verifying_key = VerifyingKey::from(&signing_key);
@@ -36,6 +37,7 @@ pub fn setup(path_to_encryption_parameters: Option<&str>) -> Result<(SignaturePa
     Ok((signature_parameters, verification_parameters))
 }
 
+/// Returns SignatureParameters stored at the given location which is relative to the working directory
 pub fn get_signature_params(path_to_encryption_parameters: Option<&str>) -> Result<SignatureParameters, String> {
     let ecdsa_private_key = get_private_key(path_to_encryption_parameters).unwrap();
         let params = SignatureParameters {
@@ -45,6 +47,7 @@ pub fn get_signature_params(path_to_encryption_parameters: Option<&str>) -> Resu
     Ok(params)
 }
 
+/// Returns VerificationParameters stored at the given location which is relative to the working directory
 pub fn get_verification_params(path_to_encryption_parameters: Option<&str>) -> Result<VerificationParameters, String> {
     let ecdsa_public_key = get_public_key(path_to_encryption_parameters).unwrap();
     let params = VerificationParameters {
