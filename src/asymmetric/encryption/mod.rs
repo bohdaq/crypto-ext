@@ -185,7 +185,7 @@ pub fn encrypt(params: EncryptionParameters, data: &[u8]) -> Result<Vec<u8>, Str
 ///
 ///    #[test]
 ///    fn decryption() {
-///        // maximum 501 bytes at once to be encrypted
+///        // to decrypt first we need to have encrypted data
 ///        let data_to_encrypt_as_bytes = "Some data to encrypt".as_bytes();
 ///
 ///        // path needs to be accessible by user with write permission for initial setup
