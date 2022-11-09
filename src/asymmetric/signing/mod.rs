@@ -66,8 +66,40 @@ pub fn get_verification_params(path_to_encryption_parameters: Option<&str>) -> R
 ///     #[test]
 ///     fn signing() {
 ///         let data = "some data to sign".as_bytes();
+///         // path needs to be accessible by user with write permission for initial setup
 ///         let path_to_params = "/test/signature_parameters/";
 ///
+///         // setup will read, or populate required parameters for signing and verification
+///         // in this example setup is used to populate the required parameters
+///         let (signature_params, verification_params) = setup(Some(path_to_params)).unwrap();
+///
+///         let signature = sign(signature_params, data).unwrap();
+///
+///         let verified = verify(verification_params, data, signature.as_slice());
+///
+///         assert!(verified.is_ok());
+///     }
+/// ```
+pub fn sign(params: SignatureParameters, data: &[u8]) -> Result<Vec<u8>, String> {
+    let signing_key = SigningKey::from_bytes(params.ecdsa_private_key.as_slice()).unwrap();
+    let signature = signing_key.sign(data);
+    Ok(signature.to_der().as_bytes().to_vec())
+}
+
+
+/// Verifies given byte array
+///
+/// # Examples
+///
+///
+/// ```
+///     use crypto_ext::asymmetric::signing::{get_signature_params, get_verification_params, setup, sign, verify};
+///     #[test]
+///     fn verification() {
+///         let data = "some data to sign".as_bytes();
+///         let path_to_params = "/test/signature_parameters/";
+///
+///         // to verify signature, we need to sign first
 ///         // setup will read, or populate required parameters for signing and verification
 ///         // in this example setup is used to populate the required parameters
 ///         let _ = setup(Some(path_to_params)).unwrap();
@@ -81,12 +113,6 @@ pub fn get_verification_params(path_to_encryption_parameters: Option<&str>) -> R
 ///         assert!(verified.is_ok());
 ///     }
 /// ```
-pub fn sign(params: SignatureParameters, data: &[u8]) -> Result<Vec<u8>, String> {
-    let signing_key = SigningKey::from_bytes(params.ecdsa_private_key.as_slice()).unwrap();
-    let signature = signing_key.sign(data);
-    Ok(signature.to_der().as_bytes().to_vec())
-}
-
 pub fn verify(params: VerificationParameters, data: &[u8], signature: &[u8]) -> Result<(), String> {
     let point = EncodedPoint::from_bytes(params.ecdsa_public_key.as_slice()).unwrap();
     let verifying_key = VerifyingKey::from_encoded_point(&point).unwrap();
