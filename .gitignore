@@ -1,3 +1,5 @@
+.aes_key
+.aes_nonce
 .rsa_passphrase
 .rsa_private_key
 .rsa_public_key
