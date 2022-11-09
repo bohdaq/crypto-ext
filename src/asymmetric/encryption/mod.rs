@@ -146,7 +146,7 @@ pub fn get_decryption_params(path_to_encryption_parameters: Option<&str>) -> Res
 /// # Examples
 ///
 /// ```
-///    use crypto_ext::asymmetric::encryption::{encrypt, decrypt, EncryptionParameters, DecryptionParameters, setup, get_encryption_params, get_decryption_params};
+///    use crypto_ext::asymmetric::encryption::{encrypt, decrypt, setup, get_encryption_params, get_decryption_params};
 ///
 ///    #[test]
 ///    fn encryption() {
@@ -191,7 +191,7 @@ pub fn encrypt(params: EncryptionParameters, data: &[u8]) -> Result<Vec<u8>, Str
 /// # Examples
 ///
 /// ```
-///    use crypto_ext::asymmetric::encryption::{encrypt, decrypt, EncryptionParameters, DecryptionParameters, setup, get_encryption_params, get_decryption_params};
+///    use crypto_ext::asymmetric::encryption::{encrypt, decrypt, setup, get_encryption_params, get_decryption_params};
 ///
 ///    #[test]
 ///    fn decryption() {
