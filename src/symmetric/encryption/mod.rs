@@ -4,11 +4,13 @@ use aes_gcm::Aes128Gcm;
 #[cfg(test)]
 mod tests;
 
+/// EncryptionParameters is basically the key and nonce
 pub struct EncryptionParameters {
     pub key: String,
     pub nonce: String,
 }
 
+/// DecryptionParameters is basically the key and nonce
 pub struct DecryptionParameters {
     pub key: String,
     pub nonce: String,
