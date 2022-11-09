@@ -1,6 +1,6 @@
 use aes_gcm::aead::{generic_array::GenericArray, Aead, KeyInit, Payload};
 use aes_gcm::Aes128Gcm;
-use crate::{generate_passphrase, get_path_relative_to_working_directory, get_static_filepath, read_or_create_and_write};
+use crate::{generate_passphrase, get_path_relative_to_working_directory, get_static_filepath, read_file, read_or_create_and_write};
 
 #[cfg(test)]
 mod tests;
@@ -65,6 +65,65 @@ pub fn setup(path_to_encryption_parameters: Option<&str>) -> Result<(EncryptionP
     let decryption_params = DecryptionParameters { key: aes_key.to_string(), nonce: aes_nonce.to_string() };
 
     Ok((encryption_params, decryption_params))
+}
+
+/// Returns EncryptionParameters stored at the given location which is relative to the working directory
+pub fn get_encryption_params(path_to_encryption_parameters: Option<&str>) -> Result<EncryptionParameters, String> {
+    let relative_path = get_path_relative_to_working_directory(path_to_encryption_parameters, ".aes_key");
+    let boxed_public_key_path = get_static_filepath(relative_path.as_str());
+    if boxed_public_key_path.is_err() {
+        return Err(boxed_public_key_path.err().unwrap());
+    }
+    let public_key_path = boxed_public_key_path.unwrap();
+
+
+    let boxed_public_key = read_file(public_key_path.as_str());
+    if boxed_public_key.is_err() {
+        let message = boxed_public_key.err().unwrap();
+        return Err(message)
+    }
+    let boxed_public_key = String::from_utf8(boxed_public_key.unwrap());
+    let aes_key = boxed_public_key.unwrap();
+
+
+    let relative_path = get_path_relative_to_working_directory(path_to_encryption_parameters, ".aes_nonce");
+    let boxed_aes_nonce_path = get_static_filepath(relative_path.as_str());
+    if boxed_aes_nonce_path.is_err() {
+        return Err(boxed_aes_nonce_path.err().unwrap());
+    }
+    let aes_nonce_path = boxed_aes_nonce_path.unwrap();
+
+
+    let boxed_aes_nonce = read_file(aes_nonce_path.as_str());
+    if boxed_aes_nonce.is_err() {
+        let message = boxed_aes_nonce.err().unwrap();
+        return Err(message)
+    }
+    let boxed_aes_nonce = String::from_utf8(boxed_aes_nonce.unwrap());
+    let aes_nonce = boxed_aes_nonce.unwrap();
+
+    let encryption_params = EncryptionParameters {
+        key: aes_key.to_string(),
+        nonce: aes_nonce.to_string(),
+    };
+
+    Ok(encryption_params)
+}
+
+/// Returns DecryptionParameters stored at the given location which is relative to the working directory
+pub fn get_decryption_params(path_to_encryption_parameters: Option<&str>) -> Result<DecryptionParameters, String> {
+    // in symmetric encryption same key and nonce used for encryption and decryption
+    let boxed_encryption_params = get_encryption_params(path_to_encryption_parameters);
+    if boxed_encryption_params.is_err() {
+        let message = boxed_encryption_params.err().unwrap().to_string();
+        return Err(message)
+    }
+    let encryption_params = boxed_encryption_params.unwrap();
+    let decryption_params = DecryptionParameters {
+        key: encryption_params.key.to_string(),
+        nonce: encryption_params.nonce.to_string()
+    };
+    Ok(decryption_params)
 }
 
 pub fn encrypt(params: EncryptionParameters, data_to_encrypt: &[u8], associated_data: &[u8]) -> Result<Vec<u8>, String> {
