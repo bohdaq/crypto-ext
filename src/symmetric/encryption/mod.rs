@@ -183,7 +183,7 @@ pub fn encrypt(params: EncryptionParameters, data_to_encrypt: &[u8], associated_
 ///
 /// ```
 ///     use crypto_ext::symmetric::encryption::{decrypt, encrypt, get_decryption_params, get_encryption_params, setup};
-/// 
+///
 ///     #[test]
 ///     fn decryption() {
 ///         // to decrypt we need to encrypt first
@@ -199,10 +199,10 @@ pub fn encrypt(params: EncryptionParameters, data_to_encrypt: &[u8], associated_
 ///         let _ = setup(Some(params_path)).unwrap();
 ///
 ///         let encryption_params = get_encryption_params(Some(params_path)).unwrap();
-///         let encrypted_data = encrypt(encryption_params, data, associated_data).unwrap();
+///         let encrypted = encrypt(encryption_params, data, associated_data).unwrap();
 ///
 ///         let decryption_params = get_decryption_params(Some(params_path)).unwrap();
-///         let decrypted = decrypt(decryption_params, encrypted_data.as_slice(), associated_data).unwrap();
+///         let decrypted = decrypt(decryption_params, encrypted.as_slice(), associated_data).unwrap();
 ///
 ///         assert_eq!(data, decrypted);
 ///
