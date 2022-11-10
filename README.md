@@ -28,6 +28,14 @@ If you want to test `crypto-ext`.
 
 > $ cargo test
 
+## Examples 
+From documentation:
+
+1. [Asymmetric encryption using public and private keys.](https://docs.rs/crypto-ext/0.0.1/crypto_ext/asymmetric/encryption/fn.encrypt.html)
+2. [Symmetric encryption using shared key and nonce.](https://docs.rs/crypto-ext/0.0.1/crypto_ext/symmetric/encryption/fn.encrypt.html)
+3. [Electronic signature and verification.](https://docs.rs/crypto-ext/0.0.1/crypto_ext/asymmetric/signing/fn.sign.html)
+4. [Generating random passphrase.](https://docs.rs/crypto-ext/0.0.1/crypto_ext/passphrase/fn.generate_passphrase.html)
+
 ## Community
 Server on [Discord](https://discord.gg/PNqtG5ctMh) where you can ask questions and share ideas. Follow the [Rust code of conduct](https://www.rust-lang.org/policies/code-of-conduct).
 
