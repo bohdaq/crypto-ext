@@ -15,7 +15,7 @@ To run tests locally you need to create folders _test/encryption_parameters_ and
 [Tests](https://github.com/bohdaq/crypto-ext) are available in the repository.
 
 ## Documentation
-Public functions definitions and usage can be found at [git repository](https://github.com/bohdaq/crypto-ext).
+Public functions definitions and usage can be found at [docs.rs](https://docs.rs/crypto-ext/0.0.1/crypto_ext/).
 
 ## Build
 If you want to build `crypto-ext` on your own, make sure you have [Rust installed](https://www.rust-lang.org/tools/install).
