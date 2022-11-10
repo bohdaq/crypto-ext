@@ -1,4 +1,5 @@
 .aes_key
+.DS_Store
 .aes_nonce
 .rsa_passphrase
 .rsa_private_key
