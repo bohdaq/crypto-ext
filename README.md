@@ -30,3 +30,5 @@ If you want to test `crypto-ext`.
 
 > $ cargo test
 
+## Community
+Server on [Discord](https://discord.gg/PNqtG5ctMh) where you can ask questions and share ideas. Follow the [Rust code of conduct](https://www.rust-lang.org/policies/code-of-conduct).
