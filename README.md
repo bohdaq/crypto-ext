@@ -17,6 +17,10 @@ To run tests locally you need to create folders _test/encryption_parameters_ and
 ## Documentation
 Public functions definitions and usage can be found at [docs.rs](https://docs.rs/crypto-ext/0.0.1/crypto_ext/).
 
+
+## Crate
+[Link to crate release](https://crates.io/crates/crypto-ext).
+
 ## Build
 If you want to build `crypto-ext` on your own, make sure you have [Rust installed](https://www.rust-lang.org/tools/install).
 
