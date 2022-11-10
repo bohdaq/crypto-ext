@@ -1,6 +1,7 @@
 use aes_gcm::aead::{generic_array::GenericArray, Aead, KeyInit, Payload};
 use aes_gcm::Aes128Gcm;
-use crate::{generate_passphrase, get_path_relative_to_working_directory, get_static_filepath, read_file, read_or_create_and_write};
+use crate::{get_path_relative_to_working_directory, get_static_filepath, read_file, read_or_create_and_write};
+use crate::passphrase::generate_passphrase;
 
 #[cfg(test)]
 mod tests;
