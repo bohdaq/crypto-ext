@@ -1,5 +1,3 @@
-Currently, a draft version of not yet published crate!
-
 # Welcome to crypto-ext!
 
 Hi, `crypto-ext` is a set of functionality providing easy and intuitive abstractions to encrypt, decrypt, sign and verify your data.
@@ -32,3 +30,6 @@ If you want to test `crypto-ext`.
 
 ## Community
 Server on [Discord](https://discord.gg/PNqtG5ctMh) where you can ask questions and share ideas. Follow the [Rust code of conduct](https://www.rust-lang.org/policies/code-of-conduct).
+
+## Donations
+If you appreciate my work and want to support it, feel free to do it via [PayPal](https://www.paypal.com/donate/?hosted_button_id=VN8QMM52PM6JC).
