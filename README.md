@@ -45,3 +45,13 @@ Server on [Discord](https://discord.gg/PNqtG5ctMh) where you can ask questions a
 
 ## Donations
 If you appreciate my work and want to support it, feel free to do it via [PayPal](https://www.paypal.com/donate/?hosted_button_id=VN8QMM52PM6JC).
+
+## Links
+1. [Rust Web Server](https://github.com/bohdaq/rust-web-server)
+1. [Rust TLS Server](https://github.com/bohdaq/rust-tls-server/)
+1. [http-to-https-letsencrypt](https://github.com/bohdaq/rust-http-to-https-letsencrypt-acme)
+1. [Rust Web Framework](https://github.com/bohdaq/rust-web-framework/)
+1. [Create Debian Package](https://github.com/bohdaq/rws-create-deb)
+1. [Create RPM Package](https://github.com/bohdaq/rws-rpm-builder)
+1. [Homebrew Formula](https://github.com/bohdaq/homebrew-rust-tls-server)
+1. [file-ext](https://github.com/bohdaq/file-ext/)
