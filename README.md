@@ -41,7 +41,11 @@ From documentation:
 4. [Generating random passphrase.](https://docs.rs/crypto-ext/0.0.1/crypto_ext/passphrase/fn.generate_passphrase.html)
 
 ## Community
-Server on [Discord](https://discord.gg/PNqtG5ctMh) where you can ask questions and share ideas. Follow the [Rust code of conduct](https://www.rust-lang.org/policies/code-of-conduct).
+Use GitHub discussions, issues and pull requests.
+
+There is Rust Web Server [Discord](https://discord.gg/zaErjtr5Dm) where you can ask questions and share ideas.
+
+Follow the [Rust code of conduct](https://www.rust-lang.org/policies/code-of-conduct).
 
 ## Donations
 If you appreciate my work and want to support it, feel free to do it via [PayPal](https://www.paypal.com/donate/?hosted_button_id=VN8QMM52PM6JC).
