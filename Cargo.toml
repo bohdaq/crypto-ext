@@ -1,12 +1,12 @@
 [package]
 name = "crypto-ext"
-version = "9.0.0"
+version = "10.0.0"
 edition = "2021"
 homepage = "https://github.com/bohdaq/crypto-ext"
 repository = "https://github.com/bohdaq/crypto-ext"
 readme = "README.md"
 description = "Set of cryptographic functions to encrypt, decrypt, sign, verify data"
-rust-version = "1.66"
+rust-version = "1.68"
 authors = ["Bohdan Tsap <bohdan.tsap@tutanota.com>"]
 keywords = ["encrypt", "decrypt", "sign", "verify", "digest"]
 categories = ["cryptography", "caching", "game-development", "web-programming"]
